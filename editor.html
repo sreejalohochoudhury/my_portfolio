@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editor · My Portfolio</title>
+  <meta name="description" content="Edit your portfolio on your phone. No coding." />
+  <style>
+    :root{--bg:#0b0f14;--panel:#0f172a;--ink:#eef2f7;--muted:#9fb0c5;--brand:#7dd3fc;--accent:#a78bfa;--line:#1e293b}
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+    img{max-width:100%;height:auto;display:block}
+    label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+    input,textarea{width:100%;background:#0d1320;border:1px solid var(--line);color:var(--ink);padding:10px;border-radius:12px}
+    textarea{min-height:100px;resize:vertical}
+    .container{max-width:1100px;margin:0 auto;padding:16px}
+    .toolbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(11,15,20,.95),rgba(11,15,20,.7) 60%,rgba(11,15,20,0));backdrop-filter: blur(6px);border-bottom:1px solid var(--line)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#0f172a;color:var(--ink);cursor:pointer}
+    .btn.primary{border-color:transparent;background:linear-gradient(90deg,var(--brand),var(--accent));color:#0b0f14;font-weight:700}
+    .grid{display:grid;gap:16px}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .section-title{font-size:18px;margin:0 0 10px}
+    .list{display:grid;gap:12px}
+    .item{border:1px dashed var(--line);border-radius:14px;padding:12px}
+    .muted{color:var(--muted)}
+    .thumb{width:100%;aspect-ratio:16/9;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .ghost{opacity:.6}
+    @media (max-width: 800px){.grid-2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="container row" style="padding:12px 16px">
+      <a class="btn" href="index.html?preview=1">Preview</a>
+      <button class="btn" id="loadSample">Load Sample</button>
+      <button class="btn" id="importBtn">Import JSON</button>
+      <input type="file" id="importFile" accept="application/json" hidden>
+      <div style="flex:1"></div>
+      <button class="btn" id="saveLocal">Save (Phone)</button>
+      <button class="btn primary" id="publishBtn">Publish (Download)</button>
+    </div>
+  </div>
+
+  <main class="container" style="padding-bottom:40px">
+    <h1 style="margin:12px 0">Edit your portfolio</h1>
+    <p class="muted">Everything you change here is saved on your phone (local only) until you tap <strong>Publish</strong> to download files you can upload to GitHub. No coding.</p>
+
+    <section class="panel">
+      <h2 class="section-title">Site</h2>
+      <div class="grid grid-2">
+        <div>
+          <label for="siteTitle">Site Title</label>
+          <input id="siteTitle" placeholder="My Portfolio"/>
+        </div>
+        <div>
+          <label for="footer">Footer</label>
+          <input id="footer" placeholder="© 2025 Your Name · All rights reserved."/>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Hero</h2>
+      <div class="grid grid-2">
+        <div>
+          <label for="heroTitle">Title</label>
+          <input id="heroTitle" placeholder="Hi, I'm …"/>
+          <label for="heroSubtitle" style="margin-top:10px">Subtitle</label>
+          <input id="heroSubtitle" placeholder="Short intro"/>
+          <label for="heroTags" style="margin-top:10px">Tags (comma separated)</label>
+          <input id="heroTags" placeholder="Designer, Developer"/>
+        </div>
+        <div>
+          <label>Profile Photo</label>
+          <div class="thumb" id="heroPhotoBox"><span class="muted">Tap to upload</span></div>
+          <input type="file" id="heroPhoto" accept="image/*" hidden />
+          <label for="heroPhotoAlt" style="margin-top:10px">Photo Alt Text</label>
+          <input id="heroPhotoAlt" placeholder="Portrait of …"/>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">About</h2>
+      <div>
+        <label for="aboutHeading">Heading</label>
+        <input id="aboutHeading" placeholder="About Me"/>
+        <label for="aboutBody" style="margin-top:10px">Body</label>
+        <textarea id="aboutBody" placeholder="Write a short bio…"></textarea>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Projects</h2>
+      <div class="list" id="projectsList"></div>
+      <button class="btn" id="addProject" style="margin-top:10px">+ Add Project</button>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Gallery</h2>
+      <div class="list" id="galleryList"></div>
+      <button class="btn" id="addImage" style="margin-top:10px">+ Add Image</button>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Social Links</h2>
+      <div class="list" id="socialsList"></div>
+      <button class="btn" id="addSocial" style="margin-top:10px">+ Add Link</button>
+    </section>
+  </main>
+
+  <script>
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    const DEFAULTS = {
+      siteTitle: "My Portfolio",
+      hero: {title:"Hi, I'm Your Name", subtitle:"I build things.", tags:["Designer","Developer"], photo:"", photoAlt:"Profile photo"},
+      about: {heading:"About Me", body:"Write your story here."},
+      gallery: [],
+      projects: [ {title:"Project One", desc:"What it is.", link:"#"} ],
+      socials: [ {label:"Email", href:"mailto:name@example.com"} ],
+      footer: "© "+new Date().getFullYear()+" Your Name · All rights reserved."
+    };
+
+    let state = loadLocal() || DEFAULTS;
+    paint();
+
+    // Toolbar actions
+    $('#loadSample').onclick = ()=>{ state = structuredClone(DEFAULTS); saveLocal(); paint(); alert('Loaded sample content.'); };
+    $('#importBtn').onclick = ()=> $('#importFile').click();
+    $('#importFile').addEventListener('change', async (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      try{ const txt = await file.text(); state = JSON.parse(txt); saveLocal(); paint(); alert('Imported content.json'); }
+      catch(err){ alert('Invalid JSON'); }
+      e.target.value = '';
+    });
+    $('#saveLocal').onclick = ()=>{ saveLocal(); alert('Saved on this device. Use Preview to check.'); };
+    $('#publishBtn').onclick = ()=> publish();
+
+    // Inputs binding
+    $('#siteTitle').addEventListener('input', e=> state.siteTitle = e.target.value);
+    $('#footer').addEventListener('input', e=> state.footer = e.target.value);
+
+    $('#heroTitle').addEventListener('input', e=> state.hero.title = e.target.value);
+    $('#heroSubtitle').addEventListener('input', e=> state.hero.subtitle = e.target.value);
+    $('#heroTags').addEventListener('input', e=> state.hero.tags = splitTags(e.target.value));
+
+    $('#heroPhotoBox').onclick = ()=> $('#heroPhoto').click();
+    $('#heroPhoto').addEventListener('change', async (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      const dataUrl = await fileToDataURL(file);
+      state.hero.photo = dataUrl;
+      paintHeroPhoto();
+      saveLocal();
+    });
+    $('#heroPhotoAlt').addEventListener('input', e=> state.hero.photoAlt = e.target.value);
+
+    // Dynamic lists
+    function paint(){
+      // Site
+      $('#siteTitle').value = state.siteTitle||'';
+      $('#footer').value = state.footer||'';
+      // Hero
+      $('#heroTitle').value = state.hero?.title||'';
+      $('#heroSubtitle').value = state.hero?.subtitle||'';
+      $('#heroTags').value = (state.hero?.tags||[]).join(', ');
+      paintHeroPhoto();
+      $('#heroPhotoAlt').value = state.hero?.photoAlt||'';
+      // About
+      $('#aboutHeading').value = state.about?.heading||'';
+      $('#aboutBody').value = state.about?.body||'';
+      $('#aboutHeading').oninput = e=> state.about.heading = e.target.value;
+      $('#aboutBody').oninput = e=> state.about.body = e.target.value;
+      // Projects
+      renderProjects();
+      // Gallery
+      renderGallery();
+      // Socials
+      renderSocials();
+      saveLocal();
+    }
+
+    function paintHeroPhoto(){
+      const box = $('#heroPhotoBox');
+      if(state.hero?.photo){
+        box.innerHTML = `<img alt="preview" src="${escapeAttr(state.hero.photo)}">`;
+      } else {
+        box.innerHTML = `<span class="muted">Tap to upload</span>`;
+      }
+    }
+
+    function renderProjects(){
+      const host = $('#projectsList'); host.innerHTML = '';
+      (state.projects||[]).forEach((p, idx)=>{
+        host.insertAdjacentHTML('beforeend', projectItemHTML(p, idx));
+      });
+      host.querySelectorAll('input[data-k]').forEach(inp=>{
+        inp.oninput = e=>{
+          const i = +e.target.dataset.i, k = e.target.dataset.k; state.projects[i][k] = e.target.value; saveLocal();
+        };
+      });
+      host.querySelectorAll('button[data-del]').forEach(btn=>{
+        btn.onclick = e=>{ const i = +e.target.dataset.del; state.projects.splice(i,1); renderProjects(); saveLocal(); };
+      });
+      host.querySelectorAll('button[data-up],button[data-down]').forEach(btn=>{
+        btn.onclick = e=>{
+          const i = +e.target.dataset.i; const dir = e.target.dataset.up? -1 : 1; const j = i+dir;
+          if(j<0||j>=state.projects.length) return; const tmp = state.projects[i]; state.projects[i]=state.projects[j]; state.projects[j]=tmp; renderProjects(); saveLocal();
+        };
+      });
+      $('#addProject').onclick = ()=>{ state.projects.push({title:'New Project', desc:'Describe it…', link:'#'}); renderProjects(); saveLocal(); };
+    }
+
+    function projectItemHTML(p, i){
+      return `<div class="item">
+        <div class="row" style="justify-content:space-between">
+          <strong>Project ${i+1}</strong>
+          <div class="row">
+            <button class="btn" data-up data-i="${i}">↑</button>
+            <button class="btn" data-down data-i="${i}">↓</button>
+            <button class="btn" data-del="${i}">Delete</button>
+          </div>
+        </div>
+        <label>Title</label>
+        <input data-k="title" data-i="${i}" value="${escapeAttr(p.title||'')}">
+        <label style="margin-top:8px">Description</label>
+        <input data-k="desc" data-i="${i}" value="${escapeAttr(p.desc||'')}">
+        <label style="margin-top:8px">Link (optional)</label>
+        <input data-k="link" data-i="${i}" value="${escapeAttr(p.link||'')}">
+      </div>`;
+    }
+
+    function renderGallery(){
+      const host = $('#galleryList'); host.innerHTML = '';
+      (state.gallery||[]).forEach((g, idx)=>{
+        host.insertAdjacentHTML('beforeend', galleryItemHTML(g, idx));
+      });
+      host.querySelectorAll('input[type="file"]').forEach(inp=>{
+        inp.onchange = async e=>{
+          const file = e.target.files[0]; if(!file) return; const i = +e.target.dataset.i; const dataUrl = await fileToDataURL(file); state.gallery[i].src = dataUrl; renderGallery(); saveLocal();
+        };
+      });
+      host.querySelectorAll('input[data-alt]').forEach(inp=>{
+        inp.oninput = e=>{ const i = +e.target.dataset.alt; state.gallery[i].alt = e.target.value; saveLocal(); };
+      });
+      host.querySelectorAll('button[data-del]').forEach(btn=>{
+        btn.onclick = e=>{ const i = +e.target.dataset.del; state.gallery.splice(i,1); renderGallery(); saveLocal(); };
+      });
+      host.querySelectorAll('button[data-up],button[data-down]').forEach(btn=>{
+        btn.onclick = e=>{
+          const i = +e.target.dataset.i; const dir = e.target.dataset.up? -1 : 1; const j = i+dir;
+          if(j<0||j>=state.gallery.length) return; const tmp = state.gallery[i]; state.gallery[i]=state.gallery[j]; state.gallery[j]=tmp; renderGallery(); saveLocal();
+        };
+      });
+      $('#addImage').onclick = ()=>{ state.gallery.push({src:"", alt:""}); renderGallery(); saveLocal(); };
+    }
+
+    function galleryItemHTML(g, i){
+      return `<div class="item">
+        <div class="row" style="justify-content:space-between">
+          <strong>Image ${i+1}</strong>
+          <div class="row">
+            <button class="btn" data-up data-i="${i}">↑</button>
+            <button class="btn" data-down data-i="${i}">↓</button>
+            <button class="btn" data-del="${i}">Delete</button>
+          </div>
+        </div>
+        <div class="thumb">${g.src?`<img src="${escapeAttr(g.src)}" alt="">`:'<span class="muted">No image</span>'}</div>
+        <div class="row" style="margin-top:8px">
+          <input type="file" accept="image/*" data-i="${i}" class="btn" style="padding:10px" />
+        </div>
+        <label style="margin-top:8px">Alt Text</label>
+        <input data-alt="${i}" value="${escapeAttr(g.alt||'')}">
+      </div>`;
+    }
+
+    function renderSocials(){
+      const host = $('#socialsList'); host.innerHTML = '';
+      (state.socials||[]).forEach((s, idx)=>{
+        host.insertAdjacentHTML('beforeend', socialItemHTML(s, idx));
+      });
+      host.querySelectorAll('input[data-k]').forEach(inp=>{
+        inp.oninput = e=>{ const i = +e.target.dataset.i; const k = e.target.dataset.k; state.socials[i][k] = e.target.value; saveLocal(); };
+      });
+      host.querySelectorAll('button[data-del]').forEach(btn=>{
+        btn.onclick = e=>{ const i = +e.target.dataset.del; state.socials.splice(i,1); renderSocials(); saveLocal(); };
+      });
+      host.querySelectorAll('button[data-up],button[data-down]').forEach(btn=>{
+        btn.onclick = e=>{
+          const i = +e.target.dataset.i; const dir = e.target.dataset.up? -1 : 1; const j = i+dir; if(j<0||j>=state.socials.length) return; const tmp = state.socials[i]; state.socials[i]=state.socials[j]; state.socials[j]=tmp; renderSocials(); saveLocal();
+        };
+      });
+      $('#addSocial').onclick = ()=>{ state.socials.push({label:'New', href:'#'}); renderSocials(); saveLocal(); };
+    }
+
+    function socialItemHTML(s, i){
+      return `<div class="item">
+        <div class="row" style="justify-content:space-between">
+          <strong>Link ${i+1}</strong>
+          <div class="row">
+            <button class="btn" data-up data-i="${i}">↑</button>
+            <button class="btn" data-down data-i="${i}">↓</button>
+            <button class="btn" data-del="${i}">Delete</button>
+          </div>
+        </div>
+        <label>Label</label>
+        <input data-k="label" data-i="${i}" value="${escapeAttr(s.label||'')}">
+        <label style="margin-top:8px">URL</label>
+        <input data-k="href" data-i="${i}" value="${escapeAttr(s.href||'')}">
+      </div>`;
+    }
+
+    function splitTags(s){ return (s||'').split(',').map(x=>x.trim()).filter(Boolean); }
+    function saveLocal(){ localStorage.setItem('siteContent', JSON.stringify(state)); }
+    function loadLocal(){ try{ const raw = localStorage.getItem('siteContent'); return raw? JSON.parse(raw): null; }catch{ return null } }
+
+    async function publish(){
+      // 1) content.json
+      const contentBlob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+      downloadBlob(contentBlob, 'content.json');
+      // 2) pre-rendered single-file index
+      const html = prerenderIndex(state);
+      const htmlBlob = new Blob([html], {type:'text/html'});
+      downloadBlob(htmlBlob, 'index.bundled.html');
+      alert('Downloaded: content.json and index.bundled.html. Upload one of them to your GitHub repo.');
+    }
+
+    function prerenderIndex(d){
+      const esc = s=> String(s||'').replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+      const attr = s=> String(s||'').replace(/["<>]/g, c=>({"\"":"&quot;","<":"&lt;",">":"&gt;"}[c]));
+      const placeholderBox = t=> `<div style="display:grid;place-items:center;aspect-ratio:1/1;border:1px dashed #1e293b;border-radius:14px;color:#9fb0c5">${esc(t)}</div>`;
+      return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.siteTitle||'My Portfolio')}</title>
+      <style>:root{--bg:#0b0f14;--card:#101723;--ink:#eef2f7;--muted:#9fb0c5;--brand:#7dd3fc;--accent:#a78bfa;--line:#1e293b}*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}img{max-width:100%;height:auto;display:block}a{color:var(--brand);text-decoration:none}.container{max-width:1100px;margin:0 auto;padding:20px}header{position:sticky;top:0;background:linear-gradient(180deg,rgba(11,15,20,.95),rgba(11,15,20,.7) 60%,rgba(11,15,20,0));backdrop-filter: blur(6px);z-index:50}nav{display:flex;justify-content:space-between;align-items:center;padding:12px 20px}.logo{font-weight:700;letter-spacing:.5px}.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#0f172a;color:var(--ink)}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;align-items:center;padding:28px 20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}h1{font-size:clamp(28px,5vw,40px);margin:0 0 10px}h2{font-size:clamp(22px,4vw,28px);margin:0 0 10px}p{line-height:1.6;color:var(--muted)}.grid{display:grid;gap:16px}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-2{grid-template-columns:repeat(2,1fr)}.tag{display:inline-block;padding:6px 10px;border:1px dashed var(--line);border-radius:999px;font-size:12px;color:var(--muted)}footer{padding:36px 20px;color:var(--muted);text-align:center}@media (max-width:900px){.hero{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}}@media (max-width:600px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}</style></head>
+      <body><header><nav class="container"><div class="logo">${esc(d.siteTitle||'My Portfolio')}</div><a class="btn" href="editor.html">Edit Site</a></nav></header>
+      <main class="container">
+      <section class="hero"><div class="card"><h1>${esc(d.hero?.title||'')}</h1><p>${esc(d.hero?.subtitle||'')}</p><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">${(d.hero?.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">${(d.socials||[]).map(s=>`<a class="btn" href="${attr(s.href)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join('')}</div></div><div class="card">${d.hero?.photo?`<img src="${attr(d.hero.photo)}" alt="${attr(d.hero.photoAlt||'')}">`:placeholderBox('Add a profile photo in the editor')}</div></section>
+      <section class="grid grid-2" style="margin-top:16px"><div class="card"><h2>${esc(d.about?.heading||'About')}</h2><p>${esc(d.about?.body||'')}</p></div><div class="card"><h2>Projects</h2><div class="grid">${(d.projects||[]).map(p=>`<div style=\"border:1px solid var(--line);border-radius:14px;padding:12px\"><strong>${esc(p.title||'')}</strong><p style=\"margin:6px 0 10px\">${esc(p.desc||'')}</p>${p.link?`<a class=\"btn\" href=\"${attr(p.link)}\" target=\"_blank\" rel=\"noopener\">View</a>`:''}</div>`).join('')}</div></div></section>
+      <section class="card" style="margin-top:16px"><h2>Gallery</h2><div class="grid grid-3">${(d.gallery||[]).map(g=>`<figure style=\"border:1px solid var(--line);border-radius:14px;overflow:hidden\"><img src=\"${attr(g.src)}\" alt=\"${attr(g.alt||'')}\">${g.alt?`<figcaption style=\"padding:8px;color:var(--muted)\">${esc(g.alt)}</figcaption>`:''}</figure>`).join('') || `<div>${placeholderBox('Add gallery images in the editor')}</div>`}</div></section>
+      </main><footer><div>${esc(d.footer||'')}</div></footer></body></html>`;
+    }
+
+    function fileToDataURL(file){
+      return new Promise((resolve,reject)=>{
+        const r = new FileReader(); r.onload = ()=> resolve(r.result); r.onerror = reject; r.readAsDataURL(file);
+      });
+    }
+    function escapeAttr(s){ return String(s||'').replace(/["<>]/g, c=>({"\"":"&quot;","<":"&lt;",">":"&gt;"}[c])); }
+    function downloadBlob(blob, filename){
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 0);
+    }
+  </script>
+</body>
+</html>
