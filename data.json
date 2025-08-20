@@ -16,34 +16,68 @@
       "title": "Research Item One",
       "desc": "One-liner summary of the research topic, method, or result.",
       "img": "assets/proj-1.jpg",
-      "tags": ["Topic", "Method", "Year"]
+      "tags": [
+        "Topic",
+        "Method",
+        "Year"
+      ]
     },
     {
       "title": "Research Item Two",
       "desc": "Brief description highlighting your contribution and impact.",
       "img": "assets/proj-2.jpg",
-      "tags": ["Area", "Tool"]
+      "tags": [
+        "Area",
+        "Tool"
+      ]
     },
     {
       "title": "Research Item Three",
       "desc": "Short summary with result/metric (if any).",
       "img": "assets/proj-3.jpg",
-      "tags": ["Domain", "Dataset"]
+      "tags": [
+        "Domain",
+        "Dataset"
+      ]
     }
   ],
   "publications": [
-    { "title": "Paper Title One", "meta": "Authors • Venue • Year", "link": "#" },
-    { "title": "Paper Title Two", "meta": "Authors • Venue • Year", "link": "#" },
-    { "title": "Paper Title Three", "meta": "Authors • Venue • Year", "link": "#" }
+    {
+      "title": "Paper Title One",
+      "meta": "Authors • Venue • Year",
+      "link": "#"
+    },
+    {
+      "title": "Paper Title Two",
+      "meta": "Authors • Venue • Year",
+      "link": "#"
+    },
+    {
+      "title": "Paper Title Three",
+      "meta": "Authors • Venue • Year",
+      "link": "#"
+    }
   ],
   "skills": [
-    { "title": "Frontend", "text": "HTML, CSS, JS, React" },
-    { "title": "Backend",  "text": "Node, Python, SQL/NoSQL" },
-    { "title": "Tooling",  "text": "Git/GitHub, CI/CD, Figma" }
+    {
+      "title": "Frontend",
+      "text": "HTML, CSS, JS, React"
+    },
+    {
+      "title": "Backend",
+      "text": "Node, Python, SQL/NoSQL"
+    },
+    {
+      "title": "Tooling",
+      "text": "Git/GitHub, CI/CD, Figma"
+    }
   ],
   "contact": {
     "email": "you@example.com",
     "location": "City, Country",
-    "socials": ["https://github.com/your", "https://linkedin.com/in/your"]
+    "socials": [
+      "https://github.com/your",
+      "https://linkedin.com/in/your"
+    ]
   }
 }
