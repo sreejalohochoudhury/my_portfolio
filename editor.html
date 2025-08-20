@@ -1,357 +1,333 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Editor · My Portfolio</title>
-  <meta name="description" content="Edit your portfolio on your phone. No coding." />
-  <style>
-    :root{--bg:#0b0f14;--panel:#0f172a;--ink:#eef2f7;--muted:#9fb0c5;--brand:#7dd3fc;--accent:#a78bfa;--line:#1e293b}
-    *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
-    img{max-width:100%;height:auto;display:block}
-    label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
-    input,textarea{width:100%;background:#0d1320;border:1px solid var(--line);color:var(--ink);padding:10px;border-radius:12px}
-    textarea{min-height:100px;resize:vertical}
-    .container{max-width:1100px;margin:0 auto;padding:16px}
-    .toolbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(11,15,20,.95),rgba(11,15,20,.7) 60%,rgba(11,15,20,0));backdrop-filter: blur(6px);border-bottom:1px solid var(--line)}
-    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#0f172a;color:var(--ink);cursor:pointer}
-    .btn.primary{border-color:transparent;background:linear-gradient(90deg,var(--brand),var(--accent));color:#0b0f14;font-weight:700}
-    .grid{display:grid;gap:16px}
-    .grid-2{grid-template-columns:repeat(2,1fr)}
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
-    .section-title{font-size:18px;margin:0 0 10px}
-    .list{display:grid;gap:12px}
-    .item{border:1px dashed var(--line);border-radius:14px;padding:12px}
-    .muted{color:var(--muted)}
-    .thumb{width:100%;aspect-ratio:16/9;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;overflow:hidden}
-    .thumb img{width:100%;height:100%;object-fit:cover}
-    .ghost{opacity:.6}
-    @media (max-width: 800px){.grid-2{grid-template-columns:1fr}}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Portfolio Editor</title>
+<style>
+  :root{--bg:#0b1020;--surface:#0f172a;--card:#0b1224;--line:#1e293b;--text:#e2e8f0;--muted:#9aa6b2;--brand:#7c3aed;--r:14px}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+  .container{max-width:1100px;margin:0 auto;padding:16px}
+  header{position:sticky;top:0;background:#0b1020cc;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:20}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:800px){.row{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+  input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+  textarea{min-height:90px}
+  label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand);border:1px solid #6d28d9;color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer}
+  .btn.secondary{background:transparent;color:var(--text)}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .small{color:var(--muted);font-size:12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="toolbar">
-    <div class="container row" style="padding:12px 16px">
-      <a class="btn" href="index.html?preview=1">Preview</a>
-      <button class="btn" id="loadSample">Load Sample</button>
-      <button class="btn" id="importBtn">Import JSON</button>
-      <input type="file" id="importFile" accept="application/json" hidden>
-      <div style="flex:1"></div>
-      <button class="btn" id="saveLocal">Save (Phone)</button>
-      <button class="btn primary" id="publishBtn">Publish (Download)</button>
-    </div>
+<header>
+  <div class="container toolbar">
+    <strong>Portfolio — Editor</strong>
+    <button class="btn" id="loadJson">Load data.json</button>
+    <button class="btn" id="saveDraft">Save draft (device)</button>
+    <button class="btn" id="publish">Publish to GitHub</button>
+    <span id="status" class="small"></span>
   </div>
+</header>
 
-  <main class="container" style="padding-bottom:40px">
-    <h1 style="margin:12px 0">Edit your portfolio</h1>
-    <p class="muted">Everything you change here is saved on your phone (local only) until you tap <strong>Publish</strong> to download files you can upload to GitHub. No coding.</p>
-
-    <section class="panel">
-      <h2 class="section-title">Site</h2>
-      <div class="grid grid-2">
-        <div>
-          <label for="siteTitle">Site Title</label>
-          <input id="siteTitle" placeholder="My Portfolio"/>
-        </div>
-        <div>
-          <label for="footer">Footer</label>
-          <input id="footer" placeholder="© 2025 Your Name · All rights reserved."/>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">Hero</h2>
-      <div class="grid grid-2">
-        <div>
-          <label for="heroTitle">Title</label>
-          <input id="heroTitle" placeholder="Hi, I'm …"/>
-          <label for="heroSubtitle" style="margin-top:10px">Subtitle</label>
-          <input id="heroSubtitle" placeholder="Short intro"/>
-          <label for="heroTags" style="margin-top:10px">Tags (comma separated)</label>
-          <input id="heroTags" placeholder="Designer, Developer"/>
-        </div>
-        <div>
-          <label>Profile Photo</label>
-          <div class="thumb" id="heroPhotoBox"><span class="muted">Tap to upload</span></div>
-          <input type="file" id="heroPhoto" accept="image/*" hidden />
-          <label for="heroPhotoAlt" style="margin-top:10px">Photo Alt Text</label>
-          <input id="heroPhotoAlt" placeholder="Portrait of …"/>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">About</h2>
+<main class="container" style="padding:14px 16px 40px">
+  <!-- Site / Hero -->
+  <section class="card">
+    <h3>Site / Hero</h3>
+    <div class="row">
+      <div><label>Site title / Name<input id="site_title" placeholder="Sreeja Loho Choudhury"/></label></div>
+      <div><label>Résumé URL (optional)<input id="resume_url" placeholder="/resume.pdf"/></label></div>
+    </div>
+    <div class="row">
+      <div><label>Hero lead/intro<textarea id="hero_lead" placeholder="Short introduction"></textarea></label></div>
+      <div><label>Location line<textarea id="hero_location" placeholder="Based in … • Timezone …"></textarea></label></div>
+    </div>
+    <div class="row" style="align-items:end">
+      <div><label>Hero image URL<input id="hero_img" placeholder="assets/portrait.jpg"/></label></div>
       <div>
-        <label for="aboutHeading">Heading</label>
-        <input id="aboutHeading" placeholder="About Me"/>
-        <label for="aboutBody" style="margin-top:10px">Body</label>
-        <textarea id="aboutBody" placeholder="Write a short bio…"></textarea>
+        <label>Upload hero image<input type="file" id="hero_img_upload" accept="image/*"/></label>
+        <div class="small">Click “OK” to set it</div>
+        <button class="btn secondary" id="hero_img_ok">OK</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="panel">
-      <h2 class="section-title">Projects</h2>
-      <div class="list" id="projectsList"></div>
-      <button class="btn" id="addProject" style="margin-top:10px">+ Add Project</button>
-    </section>
+  <!-- About -->
+  <section class="card">
+    <h3>About</h3>
+    <label>About text<textarea id="about_text"></textarea></label>
+  </section>
 
-    <section class="panel">
-      <h2 class="section-title">Gallery</h2>
-      <div class="list" id="galleryList"></div>
-      <button class="btn" id="addImage" style="margin-top:10px">+ Add Image</button>
-    </section>
+  <!-- Research items -->
+  <section class="card">
+    <div class="toolbar" style="justify-content:space-between">
+      <h3 style="margin:0">Research items</h3>
+      <button class="btn" id="addResearch">+ Add item</button>
+    </div>
+    <div id="researchList" class="list"></div>
+  </section>
 
-    <section class="panel">
-      <h2 class="section-title">Social Links</h2>
-      <div class="list" id="socialsList"></div>
-      <button class="btn" id="addSocial" style="margin-top:10px">+ Add Link</button>
-    </section>
-  </main>
+  <!-- Publications -->
+  <section class="card">
+    <div class="toolbar" style="justify-content:space-between">
+      <h3 style="margin:0">Publications</h3>
+      <button class="btn" id="addPub">+ Add publication</button>
+    </div>
+    <div id="pubList" class="list"></div>
+  </section>
 
-  <script>
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => Array.from(document.querySelectorAll(sel));
+  <!-- Skills -->
+  <section class="card">
+    <div class="toolbar" style="justify-content:space-between">
+      <h3 style="margin:0">Skills (three cards)</h3>
+      <button class="btn" id="addSkill">+ Add skill card</button>
+    </div>
+    <div id="skillList" class="list"></div>
+  </section>
 
-    const DEFAULTS = {
-      siteTitle: "My Portfolio",
-      hero: {title:"Hi, I'm Your Name", subtitle:"I build things.", tags:["Designer","Developer"], photo:"", photoAlt:"Profile photo"},
-      about: {heading:"About Me", body:"Write your story here."},
-      gallery: [],
-      projects: [ {title:"Project One", desc:"What it is.", link:"#"} ],
-      socials: [ {label:"Email", href:"mailto:name@example.com"} ],
-      footer: "© "+new Date().getFullYear()+" Your Name · All rights reserved."
-    };
+  <!-- Contact -->
+  <section class="card">
+    <h3>Contact</h3>
+    <div class="row">
+      <div><label>Email<input id="contact_email" placeholder="you@example.com"/></label></div>
+      <div><label>Location<input id="contact_location" placeholder="City, Country"/></label></div>
+    </div>
+    <div class="row">
+      <div><label>Socials (comma-separated, e.g. https://github.com/..., https://linkedin.com/in/...)<textarea id="contact_socials"></textarea></label></div>
+      <div class="small">Add as many as you like</div>
+    </div>
+  </section>
 
-    let state = loadLocal() || DEFAULTS;
-    paint();
+  <!-- GitHub settings -->
+  <section class="card">
+    <h3>GitHub publish</h3>
+    <div class="row">
+      <div><label>Repo (owner/name)<input id="repo" placeholder="owner/repo"/></label></div>
+      <div><label>Branch<input id="branch" placeholder="main"/></label></div>
+    </div>
+    <div class="row">
+      <div><label>Site folder (optional)<input id="rootPath" placeholder=""/></label></div>
+      <div><label>Fine-grained PAT (contents:write)<input id="token" type="password" placeholder="github_pat_..."/></label></div>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="remember">Remember</button>
+      <button class="btn secondary" id="forget">Forget</button>
+    </div>
+  </section>
+</main>
 
-    // Toolbar actions
-    $('#loadSample').onclick = ()=>{ state = structuredClone(DEFAULTS); saveLocal(); paint(); alert('Loaded sample content.'); };
-    $('#importBtn').onclick = ()=> $('#importFile').click();
-    $('#importFile').addEventListener('change', async (e)=>{
-      const file = e.target.files[0]; if(!file) return;
-      try{ const txt = await file.text(); state = JSON.parse(txt); saveLocal(); paint(); alert('Imported content.json'); }
-      catch(err){ alert('Invalid JSON'); }
-      e.target.value = '';
+<script>
+const $ = s=>document.querySelector(s);
+const state = {
+  site:{ title:'Sreeja Loho Choudhury', resume:'', hero:{lead:'', img:'', location:''}},
+  about:{ text:''},
+  research:[], // {title,desc,img,tags[]}
+  publications:[], // {title,meta,link}
+  skills:[], // {title,text}
+  contact:{ email:'', location:'', socials:[]},
+  _uploads:{} // path -> File
+};
+const els = {
+  site_title:$('#site_title'), resume_url:$('#resume_url'),
+  hero_lead:$('#hero_lead'), hero_img:$('#hero_img'), hero_img_upload:$('#hero_img_upload'),
+  hero_img_ok:$('#hero_img_ok'), hero_location:$('#hero_location'),
+  about_text:$('#about_text'),
+  researchList:$('#researchList'), addResearch:$('#addResearch'),
+  pubList:$('#pubList'), addPub:$('#addPub'),
+  skillList:$('#skillList'), addSkill:$('#addSkill'),
+  contact_email:$('#contact_email'), contact_location:$('#contact_location'), contact_socials:$('#contact_socials'),
+  repo:$('#repo'), branch:$('#branch'), rootPath:$('#rootPath'), token:$('#token'),
+  status:$('#status')
+};
+function fileSafe(n){return n.toLowerCase().replace(/[^a-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'');}
+function setStatus(t){els.status.textContent=t||'';}
+function unique(a){return Array.from(new Set(a));}
+
+function render(){
+  // simple render lists
+  els.researchList.innerHTML='';
+  state.research.forEach((it,idx)=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`
+      <div class="grid">
+        <div><label>Title<input data-k="title" value="${it.title||''}"/></label></div>
+        <div><label>Image URL<input data-k="img" value="${it.img||''}" placeholder="assets/proj-1.jpg"/></label></div>
+      </div>
+      <label>Description<textarea data-k="desc">${it.desc||''}</textarea></label>
+      <div class="grid" style="align-items:end">
+        <div><label>Tags (comma-separated)<input data-k="tags" value="${(it.tags||[]).join(', ')}"/></label></div>
+        <div>
+          <label>Upload images<input type="file" data-k="upload" multiple accept="image/*"/></label>
+          <button class="btn secondary" data-act="ok">OK</button>
+          <button class="btn secondary" data-act="del" style="float:right">Delete</button>
+        </div>
+      </div>`;
+    // bind
+    div.addEventListener('input',e=>{
+      const k=e.target.dataset.k; if(!k)return;
+      if(k==='tags'){ it.tags = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); }
+      else{ it[k]=e.target.value; }
     });
-    $('#saveLocal').onclick = ()=>{ saveLocal(); alert('Saved on this device. Use Preview to check.'); };
-    $('#publishBtn').onclick = ()=> publish();
-
-    // Inputs binding
-    $('#siteTitle').addEventListener('input', e=> state.siteTitle = e.target.value);
-    $('#footer').addEventListener('input', e=> state.footer = e.target.value);
-
-    $('#heroTitle').addEventListener('input', e=> state.hero.title = e.target.value);
-    $('#heroSubtitle').addEventListener('input', e=> state.hero.subtitle = e.target.value);
-    $('#heroTags').addEventListener('input', e=> state.hero.tags = splitTags(e.target.value));
-
-    $('#heroPhotoBox').onclick = ()=> $('#heroPhoto').click();
-    $('#heroPhoto').addEventListener('change', async (e)=>{
-      const file = e.target.files[0]; if(!file) return;
-      const dataUrl = await fileToDataURL(file);
-      state.hero.photo = dataUrl;
-      paintHeroPhoto();
-      saveLocal();
-    });
-    $('#heroPhotoAlt').addEventListener('input', e=> state.hero.photoAlt = e.target.value);
-
-    // Dynamic lists
-    function paint(){
-      // Site
-      $('#siteTitle').value = state.siteTitle||'';
-      $('#footer').value = state.footer||'';
-      // Hero
-      $('#heroTitle').value = state.hero?.title||'';
-      $('#heroSubtitle').value = state.hero?.subtitle||'';
-      $('#heroTags').value = (state.hero?.tags||[]).join(', ');
-      paintHeroPhoto();
-      $('#heroPhotoAlt').value = state.hero?.photoAlt||'';
-      // About
-      $('#aboutHeading').value = state.about?.heading||'';
-      $('#aboutBody').value = state.about?.body||'';
-      $('#aboutHeading').oninput = e=> state.about.heading = e.target.value;
-      $('#aboutBody').oninput = e=> state.about.body = e.target.value;
-      // Projects
-      renderProjects();
-      // Gallery
-      renderGallery();
-      // Socials
-      renderSocials();
-      saveLocal();
-    }
-
-    function paintHeroPhoto(){
-      const box = $('#heroPhotoBox');
-      if(state.hero?.photo){
-        box.innerHTML = `<img alt="preview" src="${escapeAttr(state.hero.photo)}">`;
-      } else {
-        box.innerHTML = `<span class="muted">Tap to upload</span>`;
+    div.addEventListener('click',e=>{
+      const act=e.target.dataset.act; if(!act) return;
+      if(act==='del'){ state.research.splice(idx,1); render(); }
+      if(act==='ok'){
+        const inp=div.querySelector('[data-k="upload"]');
+        if(!inp || !inp.files.length) return alert('Choose file(s) first');
+        const paths=[];
+        for(const f of Array.from(inp.files)){
+          const p='assets/'+fileSafe(f.name); state._uploads[p]=f; paths.push(p);
+        }
+        // put first image if empty; append others to desc (optional) or ignore
+        if(!it.img && paths.length) it.img=paths[0];
+        inp.value='';
+        render();
       }
-    }
+    });
+    els.researchList.appendChild(div);
+  });
 
-    function renderProjects(){
-      const host = $('#projectsList'); host.innerHTML = '';
-      (state.projects||[]).forEach((p, idx)=>{
-        host.insertAdjacentHTML('beforeend', projectItemHTML(p, idx));
-      });
-      host.querySelectorAll('input[data-k]').forEach(inp=>{
-        inp.oninput = e=>{
-          const i = +e.target.dataset.i, k = e.target.dataset.k; state.projects[i][k] = e.target.value; saveLocal();
-        };
-      });
-      host.querySelectorAll('button[data-del]').forEach(btn=>{
-        btn.onclick = e=>{ const i = +e.target.dataset.del; state.projects.splice(i,1); renderProjects(); saveLocal(); };
-      });
-      host.querySelectorAll('button[data-up],button[data-down]').forEach(btn=>{
-        btn.onclick = e=>{
-          const i = +e.target.dataset.i; const dir = e.target.dataset.up? -1 : 1; const j = i+dir;
-          if(j<0||j>=state.projects.length) return; const tmp = state.projects[i]; state.projects[i]=state.projects[j]; state.projects[j]=tmp; renderProjects(); saveLocal();
-        };
-      });
-      $('#addProject').onclick = ()=>{ state.projects.push({title:'New Project', desc:'Describe it…', link:'#'}); renderProjects(); saveLocal(); };
-    }
-
-    function projectItemHTML(p, i){
-      return `<div class="item">
-        <div class="row" style="justify-content:space-between">
-          <strong>Project ${i+1}</strong>
-          <div class="row">
-            <button class="btn" data-up data-i="${i}">↑</button>
-            <button class="btn" data-down data-i="${i}">↓</button>
-            <button class="btn" data-del="${i}">Delete</button>
-          </div>
-        </div>
-        <label>Title</label>
-        <input data-k="title" data-i="${i}" value="${escapeAttr(p.title||'')}">
-        <label style="margin-top:8px">Description</label>
-        <input data-k="desc" data-i="${i}" value="${escapeAttr(p.desc||'')}">
-        <label style="margin-top:8px">Link (optional)</label>
-        <input data-k="link" data-i="${i}" value="${escapeAttr(p.link||'')}">
+  els.pubList.innerHTML='';
+  state.publications.forEach((p,idx)=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`
+      <div class="grid">
+        <div><label>Title<input data-k="title" value="${p.title||''}"/></label></div>
+        <div><label>Meta (authors • venue • year)<input data-k="meta" value="${p.meta||''}"/></label></div>
+      </div>
+      <div class="grid" style="align-items:end">
+        <div><label>Link (DOI/URL)<input data-k="link" value="${p.link||''}"/></label></div>
+        <div><button class="btn secondary" data-act="del" style="margin-top:24px">Delete</button></div>
       </div>`;
-    }
+    div.addEventListener('input',e=>{ const k=e.target.dataset.k; if(k) p[k]=e.target.value; });
+    div.addEventListener('click',e=>{ if(e.target.dataset.act==='del'){ state.publications.splice(idx,1); render(); }});
+    els.pubList.appendChild(div);
+  });
 
-    function renderGallery(){
-      const host = $('#galleryList'); host.innerHTML = '';
-      (state.gallery||[]).forEach((g, idx)=>{
-        host.insertAdjacentHTML('beforeend', galleryItemHTML(g, idx));
-      });
-      host.querySelectorAll('input[type="file"]').forEach(inp=>{
-        inp.onchange = async e=>{
-          const file = e.target.files[0]; if(!file) return; const i = +e.target.dataset.i; const dataUrl = await fileToDataURL(file); state.gallery[i].src = dataUrl; renderGallery(); saveLocal();
-        };
-      });
-      host.querySelectorAll('input[data-alt]').forEach(inp=>{
-        inp.oninput = e=>{ const i = +e.target.dataset.alt; state.gallery[i].alt = e.target.value; saveLocal(); };
-      });
-      host.querySelectorAll('button[data-del]').forEach(btn=>{
-        btn.onclick = e=>{ const i = +e.target.dataset.del; state.gallery.splice(i,1); renderGallery(); saveLocal(); };
-      });
-      host.querySelectorAll('button[data-up],button[data-down]').forEach(btn=>{
-        btn.onclick = e=>{
-          const i = +e.target.dataset.i; const dir = e.target.dataset.up? -1 : 1; const j = i+dir;
-          if(j<0||j>=state.gallery.length) return; const tmp = state.gallery[i]; state.gallery[i]=state.gallery[j]; state.gallery[j]=tmp; renderGallery(); saveLocal();
-        };
-      });
-      $('#addImage').onclick = ()=>{ state.gallery.push({src:"", alt:""}); renderGallery(); saveLocal(); };
-    }
+  els.skillList.innerHTML='';
+  state.skills.forEach((s,idx)=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`
+      <div class="grid" style="align-items:end">
+        <div><label>Title<input data-k="title" value="${s.title||''}"/></label></div>
+        <div><button class="btn secondary" data-act="del">Delete</button></div>
+      </div>
+      <label>Text<textarea data-k="text">${s.text||''}</textarea></label>`;
+    div.addEventListener('input',e=>{ const k=e.target.dataset.k; if(k) s[k]=e.target.value; });
+    div.addEventListener('click',e=>{ if(e.target.dataset.act==='del'){ state.skills.splice(idx,1); render(); }});
+    els.skillList.appendChild(div);
+  });
 
-    function galleryItemHTML(g, i){
-      return `<div class="item">
-        <div class="row" style="justify-content:space-between">
-          <strong>Image ${i+1}</strong>
-          <div class="row">
-            <button class="btn" data-up data-i="${i}">↑</button>
-            <button class="btn" data-down data-i="${i}">↓</button>
-            <button class="btn" data-del="${i}">Delete</button>
-          </div>
-        </div>
-        <div class="thumb">${g.src?`<img src="${escapeAttr(g.src)}" alt="">`:'<span class="muted">No image</span>'}</div>
-        <div class="row" style="margin-top:8px">
-          <input type="file" accept="image/*" data-i="${i}" class="btn" style="padding:10px" />
-        </div>
-        <label style="margin-top:8px">Alt Text</label>
-        <input data-alt="${i}" value="${escapeAttr(g.alt||'')}">
-      </div>`;
-    }
+  // tops
+  els.site_title.value = state.site.title||'';
+  els.resume_url.value = state.site.resume||'';
+  els.hero_lead.value = state.site.hero.lead||'';
+  els.hero_img.value  = state.site.hero.img||'';
+  els.hero_location.value = state.site.hero.location||'';
+  els.about_text.value = state.about.text||'';
+  els.contact_email.value = state.contact.email||'';
+  els.contact_location.value = state.contact.location||'';
+  els.contact_socials.value = (state.contact.socials||[]).join(', ');
+}
+render();
 
-    function renderSocials(){
-      const host = $('#socialsList'); host.innerHTML = '';
-      (state.socials||[]).forEach((s, idx)=>{
-        host.insertAdjacentHTML('beforeend', socialItemHTML(s, idx));
+// add buttons
+els.addResearch.onclick = ()=>{ state.research.push({title:'New research',desc:'',img:'',tags:[]}); render(); };
+els.addPub.onclick = ()=>{ state.publications.push({title:'Paper title',meta:'Authors • Venue • Year',link:''}); render(); };
+els.addSkill.onclick = ()=>{ state.skills.push({title:'Skill area',text:'Short description'}); render(); };
+
+// hero upload
+els.hero_img_ok.onclick = ()=>{
+  const f=els.hero_img_upload.files[0]; if(!f) return alert('Choose a file first');
+  const path='assets/'+fileSafe(f.name); state._uploads[path]=f; state.site.hero.img=path; els.hero_img.value=path; els.hero_img_upload.value=''; render();
+};
+
+// bind simple inputs
+['input','change'].forEach(ev=>{
+  els.site_title.addEventListener(ev, ()=>state.site.title=els.site_title.value);
+  els.resume_url.addEventListener(ev, ()=>state.site.resume=els.resume_url.value);
+  els.hero_lead.addEventListener(ev, ()=>state.site.hero.lead=els.hero_lead.value);
+  els.hero_img.addEventListener(ev,  ()=>state.site.hero.img=els.hero_img.value);
+  els.hero_location.addEventListener(ev, ()=>state.site.hero.location=els.hero_location.value);
+  els.about_text.addEventListener(ev, ()=>state.about.text=els.about_text.value);
+  els.contact_email.addEventListener(ev, ()=>state.contact.email=els.contact_email.value);
+  els.contact_location.addEventListener(ev, ()=>state.contact.location=els.contact_location.value);
+  els.contact_socials.addEventListener(ev, ()=>state.contact.socials = els.contact_socials.value.split(',').map(s=>s.trim()).filter(Boolean));
+});
+
+// draft
+$('#saveDraft').onclick = ()=>{
+  localStorage.setItem('pf_editor_draft', JSON.stringify({...state,_uploads:{}}));
+  alert('Saved draft on this device.');
+};
+const rawDraft=localStorage.getItem('pf_editor_draft'); if(rawDraft){ try{ Object.assign(state, JSON.parse(rawDraft)); state._uploads={}; render(); }catch{} }
+
+// load data.json
+$('#loadJson').onclick = async ()=>{
+  try{
+    const r=await fetch('data.json?cache='+Date.now()); const d=await r.json();
+    Object.assign(state, d); state._uploads={}; render(); alert('Loaded data.json');
+  }catch(e){ alert('Could not load data.json'); }
+};
+
+// remember github creds
+$('#remember').onclick = ()=>{
+  const repo = $('#repo').value.trim().replace(/^https?:\/\/github\.com\//i,'').replace(/\/?$/,'');
+  localStorage.setItem('pf_editor_creds', JSON.stringify({repo, branch:$('#branch').value||'main', root:$('#rootPath').value||'', token:$('#token').value}));
+  alert('Saved GitHub settings.');
+};
+$('#forget').onclick = ()=>{ localStorage.removeItem('pf_editor_creds'); $('#token').value=''; alert('Cleared.'); };
+const savedCreds = localStorage.getItem('pf_editor_creds'); if(savedCreds){ const c=JSON.parse(savedCreds); $('#repo').value=c.repo||''; $('#branch').value=c.branch||'main'; $('#rootPath').value=c.root||''; $('#token').value=c.token||''; }
+
+// publish
+function b64(s){return btoa(unescape(encodeURIComponent(s))); }
+function b64Bytes(u8){let s=''; for(let i=0;i<u8.length;i++) s+=String.fromCharCode(u8[i]); return btoa(s);}
+async function gatherFiles(){
+  const files=[];
+  const clean = {...state}; delete clean._uploads;
+  files.push({path:'data.json', content:b64(JSON.stringify(clean,null,2))});
+  for(const [p,f] of Object.entries(state._uploads||{})){
+    if(f && typeof f.arrayBuffer==='function'){
+      const arr=new Uint8Array(await f.arrayBuffer());
+      files.push({path:p, content:b64Bytes(arr)});
+    }
+  }
+  return files;
+}
+$('#publish').onclick = async ()=>{
+  try{
+    setStatus('Publishing…');
+    const repoFull = $('#repo').value.trim().replace(/^https?:\/\/github\.com\//i,'').replace(/\/?$/,'');
+    const [owner,repo] = repoFull.split('/');
+    const branch = ($('#branch').value||'main').trim();
+    const token  = $('#token').value.trim();
+    const root   = $('#rootPath').value.trim();
+    if(!owner||!repo||!token){ alert('Set repo and token first'); setStatus(''); return; }
+    const base = `https://api.github.com/repos/${owner}/${repo}/contents/`;
+    const files=await gatherFiles();
+    for(const f of files){
+      const path = (root? (root.replace(/\/?$/,'/')+f.path):f.path);
+      let sha; try{
+        const meta=await fetch(base+encodeURIComponent(path)+`?ref=${encodeURIComponent(branch)}`,{headers:{Authorization:`Bearer ${token}`}});
+        if(meta.status===200){ const j=await meta.json(); sha=j.sha; }
+      }catch{}
+      const res=await fetch(base+encodeURIComponent(path),{
+        method:'PUT',
+        headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},
+        body:JSON.stringify({message:`chore: update ${f.path} via portfolio editor`, content:f.content, branch, sha})
       });
-      host.querySelectorAll('input[data-k]').forEach(inp=>{
-        inp.oninput = e=>{ const i = +e.target.dataset.i; const k = e.target.dataset.k; state.socials[i][k] = e.target.value; saveLocal(); };
-      });
-      host.querySelectorAll('button[data-del]').forEach(btn=>{
-        btn.onclick = e=>{ const i = +e.target.dataset.del; state.socials.splice(i,1); renderSocials(); saveLocal(); };
-      });
-      host.querySelectorAll('button[data-up],button[data-down]').forEach(btn=>{
-        btn.onclick = e=>{
-          const i = +e.target.dataset.i; const dir = e.target.dataset.up? -1 : 1; const j = i+dir; if(j<0||j>=state.socials.length) return; const tmp = state.socials[i]; state.socials[i]=state.socials[j]; state.socials[j]=tmp; renderSocials(); saveLocal();
-        };
-      });
-      $('#addSocial').onclick = ()=>{ state.socials.push({label:'New', href:'#'}); renderSocials(); saveLocal(); };
+      if(!res.ok){ const t=await res.text(); alert('Failed on '+path+'\n'+t); setStatus('Publish failed'); return; }
     }
-
-    function socialItemHTML(s, i){
-      return `<div class="item">
-        <div class="row" style="justify-content:space-between">
-          <strong>Link ${i+1}</strong>
-          <div class="row">
-            <button class="btn" data-up data-i="${i}">↑</button>
-            <button class="btn" data-down data-i="${i}">↓</button>
-            <button class="btn" data-del="${i}">Delete</button>
-          </div>
-        </div>
-        <label>Label</label>
-        <input data-k="label" data-i="${i}" value="${escapeAttr(s.label||'')}">
-        <label style="margin-top:8px">URL</label>
-        <input data-k="href" data-i="${i}" value="${escapeAttr(s.href||'')}">
-      </div>`;
-    }
-
-    function splitTags(s){ return (s||'').split(',').map(x=>x.trim()).filter(Boolean); }
-    function saveLocal(){ localStorage.setItem('siteContent', JSON.stringify(state)); }
-    function loadLocal(){ try{ const raw = localStorage.getItem('siteContent'); return raw? JSON.parse(raw): null; }catch{ return null } }
-
-    async function publish(){
-      // 1) content.json
-      const contentBlob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
-      downloadBlob(contentBlob, 'content.json');
-      // 2) pre-rendered single-file index
-      const html = prerenderIndex(state);
-      const htmlBlob = new Blob([html], {type:'text/html'});
-      downloadBlob(htmlBlob, 'index.bundled.html');
-      alert('Downloaded: content.json and index.bundled.html. Upload one of them to your GitHub repo.');
-    }
-
-    function prerenderIndex(d){
-      const esc = s=> String(s||'').replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-      const attr = s=> String(s||'').replace(/["<>]/g, c=>({"\"":"&quot;","<":"&lt;",">":"&gt;"}[c]));
-      const placeholderBox = t=> `<div style="display:grid;place-items:center;aspect-ratio:1/1;border:1px dashed #1e293b;border-radius:14px;color:#9fb0c5">${esc(t)}</div>`;
-      return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.siteTitle||'My Portfolio')}</title>
-      <style>:root{--bg:#0b0f14;--card:#101723;--ink:#eef2f7;--muted:#9fb0c5;--brand:#7dd3fc;--accent:#a78bfa;--line:#1e293b}*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}img{max-width:100%;height:auto;display:block}a{color:var(--brand);text-decoration:none}.container{max-width:1100px;margin:0 auto;padding:20px}header{position:sticky;top:0;background:linear-gradient(180deg,rgba(11,15,20,.95),rgba(11,15,20,.7) 60%,rgba(11,15,20,0));backdrop-filter: blur(6px);z-index:50}nav{display:flex;justify-content:space-between;align-items:center;padding:12px 20px}.logo{font-weight:700;letter-spacing:.5px}.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#0f172a;color:var(--ink)}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;align-items:center;padding:28px 20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}h1{font-size:clamp(28px,5vw,40px);margin:0 0 10px}h2{font-size:clamp(22px,4vw,28px);margin:0 0 10px}p{line-height:1.6;color:var(--muted)}.grid{display:grid;gap:16px}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-2{grid-template-columns:repeat(2,1fr)}.tag{display:inline-block;padding:6px 10px;border:1px dashed var(--line);border-radius:999px;font-size:12px;color:var(--muted)}footer{padding:36px 20px;color:var(--muted);text-align:center}@media (max-width:900px){.hero{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}}@media (max-width:600px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}</style></head>
-      <body><header><nav class="container"><div class="logo">${esc(d.siteTitle||'My Portfolio')}</div><a class="btn" href="editor.html">Edit Site</a></nav></header>
-      <main class="container">
-      <section class="hero"><div class="card"><h1>${esc(d.hero?.title||'')}</h1><p>${esc(d.hero?.subtitle||'')}</p><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">${(d.hero?.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">${(d.socials||[]).map(s=>`<a class="btn" href="${attr(s.href)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join('')}</div></div><div class="card">${d.hero?.photo?`<img src="${attr(d.hero.photo)}" alt="${attr(d.hero.photoAlt||'')}">`:placeholderBox('Add a profile photo in the editor')}</div></section>
-      <section class="grid grid-2" style="margin-top:16px"><div class="card"><h2>${esc(d.about?.heading||'About')}</h2><p>${esc(d.about?.body||'')}</p></div><div class="card"><h2>Projects</h2><div class="grid">${(d.projects||[]).map(p=>`<div style=\"border:1px solid var(--line);border-radius:14px;padding:12px\"><strong>${esc(p.title||'')}</strong><p style=\"margin:6px 0 10px\">${esc(p.desc||'')}</p>${p.link?`<a class=\"btn\" href=\"${attr(p.link)}\" target=\"_blank\" rel=\"noopener\">View</a>`:''}</div>`).join('')}</div></div></section>
-      <section class="card" style="margin-top:16px"><h2>Gallery</h2><div class="grid grid-3">${(d.gallery||[]).map(g=>`<figure style=\"border:1px solid var(--line);border-radius:14px;overflow:hidden\"><img src=\"${attr(g.src)}\" alt=\"${attr(g.alt||'')}\">${g.alt?`<figcaption style=\"padding:8px;color:var(--muted)\">${esc(g.alt)}</figcaption>`:''}</figure>`).join('') || `<div>${placeholderBox('Add gallery images in the editor')}</div>`}</div></section>
-      </main><footer><div>${esc(d.footer||'')}</div></footer></body></html>`;
-    }
-
-    function fileToDataURL(file){
-      return new Promise((resolve,reject)=>{
-        const r = new FileReader(); r.onload = ()=> resolve(r.result); r.onerror = reject; r.readAsDataURL(file);
-      });
-    }
-    function escapeAttr(s){ return String(s||'').replace(/["<>]/g, c=>({"\"":"&quot;","<":"&lt;",">":"&gt;"}[c])); }
-    function downloadBlob(blob, filename){
-      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 0);
-    }
-  </script>
+    state._uploads={};
+    setStatus('Published ✓');
+    alert('Published! GitHub Pages will refresh shortly.');
+  }catch(e){ console.error(e); setStatus('Publish failed'); }
+};
+</script>
 </body>
 </html>
