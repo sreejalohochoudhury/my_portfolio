@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sreeja Loho Choudhury — Portfolio</title>
+  <meta name="description" content="Personal portfolio showcasing research, publications, skills, and a dark/light mode toggle with sun/moon icon." />
+  <link rel="icon" href="/favicon.png" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    img{max-width:100%;height:auto;display:block}
+    a{color:inherit;text-decoration:none}
+
+    :root{
+      /* Dark (default vars; overridden in .light) */
+      --bg:#0b1020;
+      --surface:#0f172a;
+      --card:#0b1224;
+      --line:#1e293b;
+      --text:#e2e8f0;
+      --muted:#9aa6b2;
+      --brand:#7c3aed;
+      --brand-600:#6d28d9;
+      --radius:18px;
+      --shadow:0 8px 30px rgba(2,6,23,.35);
+      --hover:rgba(124,58,237,.12);
+    }
+    body.light{
+      /* Light mode palette */
+      --bg:#f8fafc;
+      --surface:#ffffff;
+      --card:#f1f5f9;
+      --line:#cbd5e1;
+      --text:#0f172a;      /* darker text for readability */
+      --muted:#475569;     /* different from dark-mode text */
+      --hover:rgba(124,58,237,.10);
+    }
+
+    body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial; background:linear-gradient(180deg,var(--bg),var(--surface)); color:var(--text); line-height:1.6; transition:background .3s ease,color .3s ease}
+    .container{width:min(1080px,92vw); margin-inline:auto}
+    .stack{display:grid;gap:clamp(14px,2.6vmin,20px)}
+    .grid{display:grid;gap:22px}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
+    @media (max-width:640px){.grid-3{grid-template-columns:1fr}}
+
+    .nav-wrap{position:sticky;top:0;z-index:40;background:rgba(11,16,32,.7);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:background .3s ease}
+    body.light .nav-wrap{background:rgba(255,255,255,.7)}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-600));display:grid;place-items:center;color:#fff;box-shadow:var(--shadow)}
+    .nav-links{display:flex;gap:18px;align-items:center}
+    .nav-links a{padding:8px 10px;border-radius:10px;color:var(--muted)}
+    .nav-links a:hover{background:var(--hover);color:var(--text)}
+
+    .btn{display:inline-grid;place-items:center;padding:10px 14px;border-radius:12px;border:1px solid var(--brand);background:var(--brand);color:#fff;font-weight:700}
+    .btn:hover{background:var(--brand-600);border-color:var(--brand-600)}
+    .pill{display:inline-block;padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.03);font-weight:600}
+
+    /* Icon button for mode toggle */
+    .icon-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer}
+    .icon-btn:hover{background:var(--card)}
+    .icon{width:20px;height:20px;display:block}
+
+    header.hero{padding:clamp(28px,6vw,70px) 0}
+    .hero-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
+    @media (max-width:900px){.hero-inner{grid-template-columns:1fr}}
+    .hero-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    h1{font-size:clamp(28px,5vw,46px);line-height:1.1;margin:8px 0 6px}
+    .lead{color:var(--muted);font-size:clamp(15px,2.2vw,18px)}
+
+    section{padding:clamp(28px,6vw,70px) 0;border-top:1px solid var(--line)}
+    section:first-of-type{border-top:none}
+    .sect-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .sect-head h2{margin:0;font-size:clamp(22px,3.2vw,30px)}
+
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .title{font-weight:800}
+
+    .project-cover{aspect-ratio:16/9;border-radius:14px;object-fit:cover;border:1px solid var(--line)}
+    .project-meta{display:flex;gap:8px;flex-wrap:wrap}
+
+    footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted)}
+    .socials{display:flex;gap:10px;flex-wrap:wrap}
+    .socials a{border:1px solid var(--line);width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+  </style>
+</head>
+<body class="light">
+  <div class="nav-wrap">
+    <div class="container">
+      <nav aria-label="Primary">
+        <a class="brand" href="#home"><span class="logo">S</span><span>Sreeja Loho Choudhury</span></a>
+        <div class="nav-links" role="navigation">
+          <a href="#about">About</a>
+          <a href="#research">Research</a>
+          <a href="#publications">Publications</a>
+          <a href="#skills">Skills</a>
+          <a href="#contact">Contact</a>
+          <button id="modeToggle" class="icon-btn" aria-label="Toggle color mode" title="Toggle color mode">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <!-- Sun icon (default in light mode) -->
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <span id="modeLabel">Light</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <header id="home" class="hero">
+    <div class="container hero-inner">
+      <div class="stack">
+        <!-- <span class="pill">Available for opportunities</span> -->
+        <h1><span style="color:var(--text)">Sreeja Loho Choudhury</span></h1>
+        <p class="lead">I build clean, fast, and accessible web experiences. Here are a few selected research highlights and what I can bring to your team.</p>
+        <div class="stack" style="grid-auto-flow:column;grid-auto-columns:max-content;gap:10px">
+          <a href="#research" class="btn">View Research</a>
+          <a href="/resume.pdf" class="pill">Download Résumé</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <img src="WhatsApp Image 2025-08-16 at 22.10.33_4f31caac.jpg" alt="Portrait of Your Name" class="project-cover" style="aspect-ratio:1/1;object-fit:cover"/>
+        <p class="lead" style="margin-top:10px">Based in City • Timezone • Open to remote/onsite</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="about">
+      <div class="container stack">
+        <div class="sect-head"><h2>About</h2><span class="pill">Who I am</span></div>
+        <p>Short bio (80–120 words). Mention focus, strengths, outcomes, and tools you love.</p>
+      </div>
+    </section>
+
+    <!-- Research (renamed from Projects) -->
+    <section id="research">
+      <div class="container stack">
+        <div class="sect-head"><h2>Research</h2><span class="pill">Selected work</span></div>
+        <div class="grid grid-3">
+          <article class="card">
+            <img class="project-cover" src="/proj-1.jpg" alt="Graphic or screenshot for Research Item One" />
+            <div class="title">Research Item One</div>
+            <p class="lead">One‑liner summary of the research topic, method, or result.</p>
+            <div class="project-meta"><span class="pill">Topic</span><span class="pill">Method</span><span class="pill">Year</span></div>
+          </article>
+          <article class="card">
+            <img class="project-cover" src="/proj-2.jpg" alt="Graphic or screenshot for Research Item Two" />
+            <div class="title">Research Item Two</div>
+            <p class="lead">Brief description highlighting your contribution and impact.</p>
+            <div class="project-meta"><span class="pill">Area</span><span class="pill">Tool</span></div>
+          </article>
+          <article class="card">
+            <img class="project-cover" src="/proj-3.jpg" alt="Graphic or screenshot for Research Item Three" />
+            <div class="title">Research Item Three</div>
+            <p class="lead">Short summary with result/metric (if any).</p>
+            <div class="project-meta"><span class="pill">Domain</span><span class="pill">Dataset</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Publications (new, placed before Skills) -->
+    <section id="publications">
+      <div class="container stack">
+        <div class="sect-head"><h2>Publications</h2><span class="pill">Papers & preprints</span></div>
+        <ol class="stack">
+          <li class="card"><span class="title">Paper Title One</span><br><span class="lead">Authors • Venue • Year • <a href="#">DOI/Link</a></span></li>
+          <li class="card"><span class="title">Paper Title Two</span><br><span class="lead">Authors • Venue • Year • <a href="#">DOI/Link</a></span></li>
+          <li class="card"><span class="title">Paper Title Three</span><br><span class="lead">Authors • Venue • Year • <a href="#">DOI/Link</a></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container stack">
+        <div class="sect-head"><h2>Skills</h2><span class="pill">What I use</span></div>
+        <div class="grid grid-3">
+          <div class="card"><div class="title">Frontend</div><p class="lead">HTML, CSS, JS, React</p></div>
+          <div class="card"><div class="title">Backend</div><p class="lead">Node, Python, SQL/NoSQL</p></div>
+          <div class="card"><div class="title">Tooling</div><p class="lead">Git/GitHub, CI/CD, Figma</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container stack">
+        <div class="sect-head"><h2>Contact</h2><span class="pill">Let's talk</span></div>
+        <div class="card">
+          <p class="lead">Email me or connect on socials. I usually reply within a day.</p>
+          <ul class="stack" style="gap:10px">
+            <li><strong>Email:</strong> you@example.com</li>
+            <li><strong>Location:</strong> City, Country</li>
+            <li class="socials">
+              <a href="#">GH</a>
+              <a href="#">in</a>
+              <a href="#">X</a>
+              <a href="#">Db</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <p>&copy; <span id="y"></span> Sreeja Loho Choudhury-Portfolio.</p>
+      <a class="pill" href="#home">Back to top</a>
+    </div>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const btn = document.getElementById('modeToggle');
+    const label = document.getElementById('modeLabel');
+
+    // Build moon icon SVG string
+    const moon = `
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>`;
+    // Build sun icon SVG string
+    const sun = `
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>`;
+
+    // Make light the default; read saved pref
+    const saved = localStorage.getItem('prefers-theme');
+    if(saved === 'dark'){
+      document.body.classList.remove('light');
+      btn.firstElementChild?.remove();
+      btn.insertAdjacentHTML('afterbegin', moon);
+      label.textContent = 'Dark';
+    } else {
+      // ensure light mode default visuals (sun + label)
+      btn.firstElementChild?.remove();
+      btn.insertAdjacentHTML('afterbegin', sun);
+      label.textContent = 'Light';
+      document.body.classList.add('light');
+    }
+
+    // Toggle handler
+    btn.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light');
+      if(isLight){
+        // switched to light
+        btn.firstElementChild?.remove();
+        btn.insertAdjacentHTML('afterbegin', sun);
+        label.textContent = 'Light';
+        localStorage.setItem('prefers-theme','light');
+      } else {
+        // switched to dark
+        btn.firstElementChild?.remove();
+        btn.insertAdjacentHTML('afterbegin', moon);
+        label.textContent = 'Dark';
+        localStorage.setItem('prefers-theme','dark');
+      }
+    });
+  </script>
+</body>
+</html>
