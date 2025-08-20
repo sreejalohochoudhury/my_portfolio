@@ -1,0 +1,24 @@
+{
+  "siteTitle": "Sreeja Lohoc's Portfolio",
+  "hero": {
+    "title": "Hi, I'm Sreeja",
+    "subtitle": "I design beautiful, fast, responsive sites.",
+    "tags": ["UI/UX","Frontend","Freelance"],
+    "photo": "",
+    "photoAlt": "Portrait"
+  },
+  "about": {
+    "heading": "About Me",
+    "body": "I help clients transform ideas into clean, responsive websites."
+  },
+  "projects": [
+    {"title":"Rolex Custom Store","desc":"E‑commerce UI prototype for watches.","link":"#"},
+    {"title":"Portfolio Redesign","desc":"A minimal, mobile‑first portfolio.","link":"#"}
+  ],
+  "gallery": [],
+  "socials": [
+    {"label":"Email","href":"mailto:hello@example.com"},
+    {"label":"LinkedIn","href":"https://linkedin.com"}
+  ],
+  "footer": "© 2025 Sreeja Loho · All rights reserved."
+}
