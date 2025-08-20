@@ -1,10 +1,10 @@
 {
   "site": {
     "title": "Sreeja Loho Choudhury",
-    "resume": "/resume.pdf",
+    "resume": "https://drive.google.com/file/d/1I9D0vzcOVGOvONLFa9ByPd33x8AJsgwF/preview",
     "hero": {
       "lead": "I am a Physicists study the fundamental laws of nature, exploring matter, energy, space, and time. From Isaac Newton's laws of motion to Einstein's theory of relativity, their work shapes our understanding of the universe and fuels technological advancements. ",
-      "img": "assets/WhatsApp Image 2025-08-16 at 22.10.33_4f31caac.jpg",
+      "img": "assets/whatsapp-image-2025-08-16-at-22.10.33_4f31caac.jpg",
       "location": "Based in City usa california"
     }
   },
