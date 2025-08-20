@@ -278,6 +278,81 @@
         localStorage.setItem('prefers-theme','dark');
       }
     });
+
+(async function(){
+  try{
+    const d = await fetch('data.json?cache='+Date.now()).then(r=>r.json());
+
+    // title / brand
+    document.title = d.site?.title ? `${d.site.title} — Portfolio` : document.title;
+    const brand = document.querySelector('.brand');
+    if(brand && d.site?.title){ brand.lastElementChild.textContent = d.site.title; }
+
+    // hero
+    const leadEl = document.querySelector('.hero .lead');
+    if(leadEl && d.site?.hero?.lead) leadEl.textContent = d.site.hero.lead;
+
+    const heroImg = document.querySelector('.hero-card img');
+    if(heroImg && d.site?.hero?.img) heroImg.src = d.site.hero.img;
+
+    const heroLoc = document.querySelector('.hero-card .lead');
+    if(heroLoc && d.site?.hero?.location) heroLoc.textContent = d.site.hero.location;
+
+    const resumeLink = document.querySelector('a[href="/resume.pdf"]');
+    if(resumeLink && d.site?.resume){ resumeLink.href = d.site.resume; }
+
+    // about
+    const about = document.querySelector('#about p');
+    if(about && d.about?.text) about.textContent = d.about.text;
+
+    // research grid
+    const grid = document.querySelector('#research .grid');
+    if(grid && Array.isArray(d.research)){
+      grid.innerHTML = d.research.map(it=>`
+        <article class="card">
+          <img class="project-cover" src="${it.img||''}" alt="">
+          <div class="title">${it.title||''}</div>
+          <p class="lead">${it.desc||''}</p>
+          <div class="project-meta">
+            ${(it.tags||[]).map(t=>`<span class="pill">${t}</span>`).join('')}
+          </div>
+        </article>`).join('');
+    }
+
+    // publications
+    const pubList = document.querySelector('#publications ol');
+    if(pubList && Array.isArray(d.publications)){
+      pubList.innerHTML = d.publications.map(p=>`
+        <li class="card">
+          <span class="title">${p.title||''}</span><br>
+          <span class="lead">${p.meta||''} • <a href="${p.link||'#'}">Link</a></span>
+        </li>`).join('');
+    }
+
+    // skills
+    const skillsGrid = document.querySelector('#skills .grid');
+    if(skillsGrid && Array.isArray(d.skills)){
+      skillsGrid.innerHTML = d.skills.map(s=>`
+        <div class="card"><div class="title">${s.title||''}</div><p class="lead">${s.text||''}</p></div>
+      `).join('');
+    }
+
+    // contact
+    const emailEl = document.querySelector('#contact .card li strong + text');
+    const emailLi = document.querySelector('#contact .card li:nth-child(1)');
+    const locLi = document.querySelector('#contact .card li:nth-child(2)');
+    const socials = document.querySelector('#contact .socials');
+    if(emailLi && d.contact?.email) emailLi.innerHTML = `<strong>Email:</strong> ${d.contact.email}`;
+    if(locLi && d.contact?.location) locLi.innerHTML = `<strong>Location:</strong> ${d.contact.location}`;
+    if(socials){
+      socials.innerHTML = (d.contact?.socials||[]).map(u=>`<a href="${u}" target="_blank" rel="noopener">↗</a>`).join('');
+    }
+
+  }catch(e){ console.warn('Could not load data.json', e); }
+})();
+
+
   </script>
 </body>
 </html>
+
