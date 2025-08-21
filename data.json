@@ -1,17 +1,25 @@
 {
   "site": {
     "title": "Sreeja Loho Choudhury",
-    "resume": "https://drive.google.com/file/d/1I9D0vzcOVGOvONLFa9ByPd33x8AJsgwF/preview",
+    "resume": "https://drive.google.com/file/d/1dSagagTorI8ipssUuGvHAymvjPyJFE-l/view",
     "hero": {
-      "lead": "",
+      "lead": "I am a theoretical physicist working in the field of atomic and molecular physics with an expertise in quantum dynamics, open quantum systems.",
       "img": "",
-      "location": ""
+      "location": "Based in Raleigh, United States"
     }
   },
   "about": {
-    "text": ""
+    "text": "I am a good girl."
   },
-  "research": [],
+  "research": [
+    {
+      "title": "Sreeja",
+      "desc": "",
+      "img": "assets/signature.jpg",
+      "tags": [],
+      "upload": "C:\\fakepath\\Signature.jpg"
+    }
+  ],
   "publications": [],
   "skills": [],
   "contact": {
