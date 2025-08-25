@@ -1,30 +1,50 @@
 {
   "site": {
     "title": "Sreeja Loho Choudhury",
-    "resume": "https://drive.google.com/file/d/1dSagagTorI8ipssUuGvHAymvjPyJFE-l/view",
+    "resume": "",
     "hero": {
-      "lead": "I am a theoretical physicist working in the field of atomic and molecular physics with an expertise in quantum dynamics, open quantum systems.",
+      "lead": "I am a theoretical physicist working in the field of atomic and molecular physics with an expertise in quantum dynamics, open quantum systems, semiclassical mechanics, variational methods. ",
       "img": "",
-      "location": "Based in Raleigh, United States"
+      "location": ""
     }
   },
   "about": {
-    "text": "I am a good girl."
+    "text": ""
   },
   "research": [
     {
-      "title": "Sreeja",
+      "title": "New research",
       "desc": "",
-      "img": "assets/signature.jpg",
-      "tags": [],
-      "upload": "C:\\fakepath\\Signature.jpg"
+      "img": "",
+      "tags": []
     }
   ],
-  "publications": [],
+  "publications": [
+    {
+      "title": "Quantum approach to the thermalization of the toppling pencil interacting with a finite bath",
+      "meta": "Sreeja Loho Choudhury and Frank Grossmann • Dresden • 2022",
+      "link": "https://doi.org/10.1103/PhysRevA.105.022201"
+    },
+    {
+      "title": "Coherent state based solutions of the time-dependent Schrödinger equation: hierarchy of approximations to the variational principle",
+      "meta": "Michael Werther, Sreeja Loho Choudhury and Frank Grossmann • Dresden • 2021",
+      "link": "https://doi.org/10.1080/0144235X.2020.1823168"
+    },
+    {
+      "title": "On the Husimi version of the classical limit of quantum correlation functions",
+      "meta": "Sreeja Loho Choudhury and Frank Grossmann • Dresden • 2020",
+      "link": "https://doi.org/10.3390/condmat5010003"
+    },
+    {
+      "title": "A new approach to the generalization of Planck's law of black-body radiation",
+      "meta": "Sreeja Loho Choudhury and R. K. Paul • Ranchi • 2018",
+      "link": "https://doi.org/10.1016/j.aop.2018.06.004"
+    }
+  ],
   "skills": [],
   "contact": {
-    "email": "",
-    "location": "",
+    "email": "sreejalohochoudhury@gmail.com",
+    "location": "Raleigh, North Carolina",
     "socials": []
   }
 }
