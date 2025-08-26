@@ -5,7 +5,7 @@
     "hero": {
       "lead": "I am a theoretical physicist working in the field of atomic and molecular physics with an expertise in quantum dynamics, open quantum systems, semiclassical mechanics, variational methods. ",
       "img": "",
-      "location": ""
+      "location": "Raleigh, United States"
     }
   },
   "about": {
@@ -41,10 +41,20 @@
       "link": "https://doi.org/10.1016/j.aop.2018.06.004"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "title": "Skill area",
+      "text": "Short description"
+    }
+  ],
   "contact": {
     "email": "sreejalohochoudhury@gmail.com",
     "location": "Raleigh, North Carolina",
-    "socials": []
+    "socials": [
+      "https://sreejalohochoudhury.github.io/my_portfolio/",
+      "https://scholar.google.com/citations?user=NG3Qg9YAAAAJ&hl=en&oi=ao",
+      "https://www.researchgate.net/profile/Sreeja-Loho-Choudhury",
+      "https://www.linkedin.com/in/sreeja-loho-choudhury-7b7785124/"
+    ]
   }
 }
