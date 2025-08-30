@@ -13,19 +13,24 @@
   },
   "research": [
     {
-      "title": "Dynamics of polarons in semiconducting materials ",
-      "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments, with applications spanning quantum technologies, condensed matter physics, and chemical/biological systems. ",
-      "img": "assets/chatgpt.png",
-      "tags": [
-        "ss"
-      ],
-      "upload": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png"
+      "title": "Dynamics of polarons in semiconducting materials",
+      "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments.",
+      "img": "assets/research/whatsapp-image-2025-08-01-at-4.56.25-pm-1.jpeg",
+      "tags": ["quantum", "open systems"],
+      "images": [
+        { "src": "assets/research/whatsapp-image-2025-08-01-at-4.56.25-pm-1.jpeg", "alt": "Polaron figure 1", "caption": "Main figure", "date": "2025-08-01" },
+        { "src": "assets/research/img-2.jpg", "alt": "Polaron figure 2", "caption": "Auxiliary plot", "date": "2025-08-02" }
+      ]
     },
     {
-      "title": "",
-      "desc": "",
-      "img": "",
-      "tags": []
+      "title": "Quantum correlation functions",
+      "desc": "Exploring Husimi-based classical limits for correlation functions and their implications.",
+      "img": "assets/research/img-a.jpg",
+      "tags": ["husimi", "correlations"],
+      "images": [
+        { "src": "assets/research/img-a.jpg", "alt": "Correlation fig A", "caption": "Setup", "date": "2024-11-10" },
+        { "src": "assets/research/img-b.jpg", "alt": "Correlation fig B", "caption": "Results", "date": "2024-11-12" }
+      ]
     }
   ],
   "publications": [
@@ -51,10 +56,7 @@
     }
   ],
   "skills": [
-    {
-      "title": "Skill area",
-      "text": "Short description"
-    }
+    { "title": "Skill area", "text": "Short description" }
   ],
   "contact": {
     "email": "sreejalohochoudhury@gmail.com, slohoch@ncsu.edu",
