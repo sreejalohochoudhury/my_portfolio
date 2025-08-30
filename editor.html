@@ -22,6 +22,10 @@
   .small{color:var(--muted);font-size:12px}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .thumbs{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .thumb{border:1px solid var(--line);border-radius:10px;padding:6px;background:var(--surface);display:flex;align-items:center;gap:8px}
+  .thumb img{width:60px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+  .thumb .mini-actions{display:flex;gap:6px}
 </style>
 </head>
 <body>
@@ -63,7 +67,7 @@
     <label>About text<textarea id="about_text"></textarea></label>
   </section>
 
-  <!-- Research items -->
+  <!-- Research items (each has its own gallery) -->
   <section class="card">
     <div class="toolbar" style="justify-content:space-between">
       <h3 style="margin:0">Research items</h3>
@@ -99,11 +103,11 @@
     </div>
     <div class="row">
       <div><label>Socials (comma-separated, e.g. https://github.com/..., https://linkedin.com/in/...)<textarea id="contact_socials"></textarea></label></div>
-      <div class="small">Add as many as you like</div>
+      <div class="small">Paste any links — icons appear automatically on the site.</div>
     </div>
   </section>
 
-  <!-- GitHub settings -->
+  <!-- GitHub -->
   <section class="card">
     <h3>GitHub publish</h3>
     <div class="row">
@@ -126,7 +130,7 @@ const $ = s=>document.querySelector(s);
 const state = {
   site:{ title:'Sreeja Loho Choudhury', resume:'', hero:{lead:'', img:'', location:''}},
   about:{ text:''},
-  research:[], // {title,desc,img,tags[]}
+  research:[], // {title,desc,img,tags[], images:[{src,alt,caption,date}]}
   publications:[], // {title,meta,link}
   skills:[], // {title,text}
   contact:{ email:'', location:'', socials:[]},
@@ -146,52 +150,116 @@ const els = {
 };
 function fileSafe(n){return n.toLowerCase().replace(/[^a-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'');}
 function setStatus(t){els.status.textContent=t||'';}
-function unique(a){return Array.from(new Set(a));}
 
 function render(){
-  // simple render lists
   els.researchList.innerHTML='';
   state.research.forEach((it,idx)=>{
+    if(!Array.isArray(it.images)) it.images=[];
+    const thumbs = it.images.map((im,i)=>`
+      <div class="thumb" data-i="${i}">
+        ${im.src?`<img src="${im.src}" alt="">`:`<div class="small" style="width:60px">no image</div>`}
+        <div style="min-width:220px;flex:1">
+          <label>src<input data-k="src" data-i="${i}" value="${im.src||''}" placeholder="assets/research/img.jpg"></label>
+          <label>alt<input data-k="alt" data-i="${i}" value="${im.alt||''}" placeholder="description"></label>
+        </div>
+        <div class="mini-actions">
+          <label class="btn secondary" style="cursor:pointer">
+            <input type="file" data-k="replace" data-i="${i}" accept="image/*" style="display:none">Replace
+          </label>
+          <button class="btn secondary" data-act="cover" data-i="${i}" title="Set as cover">Cover</button>
+          <button class="btn secondary" data-act="delimg" data-i="${i}">Delete</button>
+        </div>
+      </div>
+    `).join('');
+
     const div=document.createElement('div'); div.className='card';
     div.innerHTML=`
       <div class="grid">
         <div><label>Title<input data-k="title" value="${it.title||''}"/></label></div>
-        <div><label>Image URL<input data-k="img" value="${it.img||''}" placeholder="assets/proj-1.jpg"/></label></div>
+        <div><label>Cover image URL (auto = first in gallery)<input data-k="img" value="${it.img||''}" placeholder="assets/cover.jpg"/></label></div>
       </div>
       <label>Description<textarea data-k="desc">${it.desc||''}</textarea></label>
+
       <div class="grid" style="align-items:end">
         <div><label>Tags (comma-separated)<input data-k="tags" value="${(it.tags||[]).join(', ')}"/></label></div>
         <div>
-          <label>Upload images<input type="file" data-k="upload" multiple accept="image/*"/></label>
-          <button class="btn secondary" data-act="ok">OK</button>
-          <button class="btn secondary" data-act="del" style="float:right">Delete</button>
+          <!-- SIMPLE FLOW: choose file → OK appends to images[] -->
+          <label>Choose file<input type="file" data-k="appendFile" accept="image/*"/></label>
+          <button class="btn" data-act="appendOk">OK</button>
+          <button class="btn secondary" data-act="del" style="float:right">Delete research</button>
         </div>
-      </div>`;
-    // bind
-    div.addEventListener('input',e=>{
-      const k=e.target.dataset.k; if(!k)return;
+      </div>
+
+      <div class="toolbar" style="margin:10px 0 0 0;gap:8px;flex-wrap:wrap">
+        <label class="btn secondary" style="cursor:pointer">
+          <input type="file" data-k="bulk" multiple accept="image/*" style="display:none">Bulk upload images
+        </label>
+        <button class="btn" data-act="addslot">+ Add empty slot</button>
+      </div>
+
+      <div class="thumbs">${thumbs || '<div class="small">No images yet.</div>'}</div>
+    `;
+
+    // text inputs
+    div.addEventListener('input', e=>{
+      const k=e.target.dataset.k; if(!k) return;
       if(k==='tags'){ it.tags = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); }
+      else if(k==='src' || k==='alt'){ const i=+e.target.dataset.i; if(isFinite(i)) it.images[i][k]=e.target.value; }
       else{ it[k]=e.target.value; }
     });
-    div.addEventListener('click',e=>{
-      const act=e.target.dataset.act; if(!act) return;
-      if(act==='del'){ state.research.splice(idx,1); render(); }
-      if(act==='ok'){
-        const inp=div.querySelector('[data-k="upload"]');
-        if(!inp || !inp.files.length) return alert('Choose file(s) first');
-        const paths=[];
-        for(const f of Array.from(inp.files)){
-          const p='assets/'+fileSafe(f.name); state._uploads[p]=f; paths.push(p);
+
+    // file inputs
+    div.addEventListener('change', e=>{
+      const k=e.target.dataset.k;
+      if(k==='bulk'){
+        const files=Array.from(e.target.files||[]);
+        for(const f of files){
+          const p='assets/research/'+fileSafe(f.name);
+          state._uploads[p]=f;
+          it.images.push({src:p,alt:it.title?`Image for ${it.title}`:'',caption:'',date:new Date().toISOString().slice(0,10)});
         }
-        // put first image if empty; append others to desc (optional) or ignore
-        if(!it.img && paths.length) it.img=paths[0];
-        inp.value='';
+        if(!it.img && it.images[0]) it.img=it.images[0].src;
+        e.target.value='';
+        render();
+      }
+      if(k==='replace'){
+        const i=+e.target.dataset.i; const f=e.target.files[0]; if(!f) return;
+        const p='assets/research/'+fileSafe(f.name);
+        state._uploads[p]=f;
+        it.images[i].src=p;
+        if(!it.img) it.img=p;
+        render();
+      }
+      if(k==='appendFile'){
+        // store chosen file temporarily on the element
+        e.target.dataset.buf = '1';
+      }
+    });
+
+    // click actions
+    div.addEventListener('click', e=>{
+      const act=e.target.dataset.act;
+      if(act==='del'){ state.research.splice(idx,1); render(); }
+      if(act==='addslot'){ it.images.push({src:'',alt:'',caption:'',date:new Date().toISOString().slice(0,10)}); render(); }
+      if(act==='delimg'){ const i=+e.target.dataset.i; it.images.splice(i,1); if(it.images[0]) it.img=it.images[0].src; else it.img=''; render(); }
+      if(act==='cover'){ const i=+e.target.dataset.i; const im=it.images[i]; if(im && im.src){ it.img=im.src; alert('Set as cover'); } }
+      if(act==='appendOk'){
+        const input = div.querySelector('input[data-k="appendFile"]');
+        const f = input?.files?.[0];
+        if(!f){ alert('Choose a file first'); return; }
+        const p='assets/research/'+fileSafe(f.name);
+        state._uploads[p]=f;
+        it.images.push({src:p,alt:it.title?`Image for ${it.title}`:'',caption:'',date:new Date().toISOString().slice(0,10)});
+        if(!it.img) it.img=p;
+        input.value=''; // ready for next: Choose file → OK
         render();
       }
     });
+
     els.researchList.appendChild(div);
   });
 
+  // publications
   els.pubList.innerHTML='';
   state.publications.forEach((p,idx)=>{
     const div=document.createElement('div'); div.className='card';
@@ -209,6 +277,7 @@ function render(){
     els.pubList.appendChild(div);
   });
 
+  // skills
   els.skillList.innerHTML='';
   state.skills.forEach((s,idx)=>{
     const div=document.createElement('div'); div.className='card';
@@ -223,7 +292,7 @@ function render(){
     els.skillList.appendChild(div);
   });
 
-  // tops
+  // top fields
   els.site_title.value = state.site.title||'';
   els.resume_url.value = state.site.resume||'';
   els.hero_lead.value = state.site.hero.lead||'';
@@ -237,7 +306,7 @@ function render(){
 render();
 
 // add buttons
-els.addResearch.onclick = ()=>{ state.research.push({title:'New research',desc:'',img:'',tags:[]}); render(); };
+els.addResearch.onclick = ()=>{ state.research.push({title:'New research',desc:'',img:'',tags:[],images:[]}); render(); };
 els.addPub.onclick = ()=>{ state.publications.push({title:'Paper title',meta:'Authors • Venue • Year',link:''}); render(); };
 els.addSkill.onclick = ()=>{ state.skills.push({title:'Skill area',text:'Short description'}); render(); };
 
@@ -247,7 +316,7 @@ els.hero_img_ok.onclick = ()=>{
   const path='assets/'+fileSafe(f.name); state._uploads[path]=f; state.site.hero.img=path; els.hero_img.value=path; els.hero_img_upload.value=''; render();
 };
 
-// bind simple inputs
+// binds
 ['input','change'].forEach(ev=>{
   els.site_title.addEventListener(ev, ()=>state.site.title=els.site_title.value);
   els.resume_url.addEventListener(ev, ()=>state.site.resume=els.resume_url.value);
@@ -267,10 +336,14 @@ $('#saveDraft').onclick = ()=>{
 };
 const rawDraft=localStorage.getItem('pf_editor_draft'); if(rawDraft){ try{ Object.assign(state, JSON.parse(rawDraft)); state._uploads={}; render(); }catch{} }
 
-// load data.json
+// load JSON (migrate single img -> images[0] once)
 $('#loadJson').onclick = async ()=>{
   try{
     const r=await fetch('data.json?cache='+Date.now()); const d=await r.json();
+    (d.research||[]).forEach(it=>{
+      if(!Array.isArray(it.images)) it.images=[];
+      if(it.img && !it.images.length) it.images=[{src:it.img, alt:it.title||'', caption:'', date:new Date().toISOString().slice(0,10)}];
+    });
     Object.assign(state, d); state._uploads={}; render(); alert('Loaded data.json');
   }catch(e){ alert('Could not load data.json'); }
 };
@@ -284,7 +357,7 @@ $('#remember').onclick = ()=>{
 $('#forget').onclick = ()=>{ localStorage.removeItem('pf_editor_creds'); $('#token').value=''; alert('Cleared.'); };
 const savedCreds = localStorage.getItem('pf_editor_creds'); if(savedCreds){ const c=JSON.parse(savedCreds); $('#repo').value=c.repo||''; $('#branch').value=c.branch||'main'; $('#rootPath').value=c.root||''; $('#token').value=c.token||''; }
 
-// publish
+// publish to GitHub
 function b64(s){return btoa(unescape(encodeURIComponent(s))); }
 function b64Bytes(u8){let s=''; for(let i=0;i<u8.length;i++) s+=String.fromCharCode(u8[i]); return btoa(s);}
 async function gatherFiles(){
