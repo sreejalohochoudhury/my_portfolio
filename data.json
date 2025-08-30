@@ -9,14 +9,15 @@
     }
   },
   "about": {
-    "text": ""
+    "text": "I am a physicist specializing in quantum dynamics and open quantum\nsystems, with a strong background in numerical simulations, analytical calculations and delving with system-bath models. I am passionate about Mathematics and Physics in general. I am well prepared to teach undergraduate and postgraduate\ncourses in quantum mechanics, statistical physics, quantum computation and computational\nmethods. Passionate about integrating research with pedagogy and mentoring\nstudents in modern quantum science. Seeking a faculty position to\ncontribute to both high-quality research and curriculum innovation."
   },
   "research": [
     {
-      "title": "New research",
-      "desc": "",
-      "img": "",
-      "tags": []
+      "title": "Dynamics of polarons in semiconducting materials ",
+      "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments, with applications spanning quantum technologies, condensed matter physics, and chemical/biological systems. ",
+      "img": "assets/chatgpt.png",
+      "tags": [],
+      "upload": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png"
     }
   ],
   "publications": [
@@ -48,7 +49,7 @@
     }
   ],
   "contact": {
-    "email": "sreejalohochoudhury@gmail.com",
+    "email": "sreejalohochoudhury@gmail.com, slohoch@ncsu.edu",
     "location": "Raleigh, North Carolina",
     "socials": [
       "https://sreejalohochoudhury.github.io/my_portfolio/",
