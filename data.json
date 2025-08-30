@@ -16,8 +16,16 @@
       "title": "Dynamics of polarons in semiconducting materials ",
       "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments, with applications spanning quantum technologies, condensed matter physics, and chemical/biological systems. ",
       "img": "assets/chatgpt.png",
-      "tags": [],
+      "tags": [
+        "ss"
+      ],
       "upload": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png"
+    },
+    {
+      "title": "",
+      "desc": "",
+      "img": "",
+      "tags": []
     }
   ],
   "publications": [
