@@ -69,7 +69,16 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
     .title{font-weight:800}
 
-    .project-cover{aspect-ratio:16/9;border-radius:14px;object-fit:cover;border:1px solid var(--line);cursor:pointer}
+    /* cover: no crop */
+    .project-cover{
+      width:100%;
+      max-height:230px;
+      object-fit:contain;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--surface);
+      cursor:pointer;
+    }
     .project-meta{display:flex;gap:8px;flex-wrap:wrap}
 
     footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted)}
@@ -81,15 +90,26 @@
     .lightbox{position:fixed;inset:0;background:rgba(2,6,23,.78);backdrop-filter:blur(6px);
       display:none;align-items:center;justify-content:center;z-index:1000}
     .lightbox.show{display:flex}
-    .lb-inner{position:relative;width:min(1000px,92vw)}
+    .lb-inner{position:relative;width:min(1100px,94vw)}
     .lb-imgwrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
-    .lb-img{width:100%;max-height:72vh;object-fit:contain;cursor:pointer}
-    .lb-close{position:absolute;left:0;top:0;transform:translate(-10px,-10px);
-      background:var(--surface);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer}
-    .lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(15,23,42,.75);
-      border:1px solid var(--line);color:#fff;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;cursor:pointer}
+    .lb-img{width:100%;max-height:75vh;object-fit:contain;cursor:pointer}
+    /* clean arrows (no background blocks) */
+    .lb-prev,.lb-next{
+      position:absolute;top:50%;transform:translateY(-50%);
+      background:transparent;border:none;color:#fff;font-size:34px;line-height:1;
+      width:48px;height:48px;display:grid;place-items:center;cursor:pointer;opacity:.8;text-shadow:0 2px 8px rgba(0,0,0,.6)
+    }
+    .lb-prev:hover,.lb-next:hover{opacity:1}
     .lb-prev{left:10px} .lb-next{right:10px}
-    .lb-caption{margin-top:8px;color:var(--muted);text-align:center}
+    /* minimal close button in overlay corner */
+    .lb-close{
+      position:fixed;top:18px;left:18px;
+      background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;
+      padding:8px 10px;opacity:.9
+    }
+    .lb-close:hover{opacity:1;text-decoration:underline}
+    .lb-caption{margin-top:8px;color:var(--muted);text-align:center;min-height:1.2em}
+    .lb-count{font-weight:600;color:var(--text)}
   </style>
 </head>
 <body class="light">
@@ -128,7 +148,7 @@
         </div>
       </div>
       <div class="hero-card">
-        <img src="WhatsApp Image 2025-08-16 at 22.10.33_4f31caac.jpg" alt="Portrait of Your Name" class="project-cover" style="aspect-ratio:1/1;object-fit:cover"/>
+        <img src="WhatsApp Image 2025-08-16 at 22.10.33_4f31caac.jpg" alt="Portrait of Your Name" class="project-cover" style="max-height:340px"/>
         <p class="lead" style="margin-top:10px">Based in City • Timezone • Open to remote/onsite</p>
       </div>
     </div>
@@ -200,11 +220,11 @@
 
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Gallery">
+    <button class="lb-close" id="lbClose" aria-label="Close gallery">✕ Close</button>
     <div class="lb-inner">
-      <button class="lb-close" id="lbClose" aria-label="Close gallery">✕ Close</button>
       <div class="lb-imgwrap">
-        <img id="lbImg" class="lb-img" alt="Gallery image"/>
         <button class="lb-prev" id="lbPrev" aria-label="Previous image">‹</button>
+        <img id="lbImg" class="lb-img" alt="Gallery image"/>
         <button class="lb-next" id="lbNext" aria-label="Next image">›</button>
       </div>
       <div id="lbCaption" class="lb-caption"></div>
@@ -246,7 +266,7 @@
       return icons[key] || globe;
     }
 
-    // DATA BIND & LIGHTBOX
+    // ---------- Lightbox state ----------
     const lightbox = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
     const lbCaption = document.getElementById('lbCaption');
@@ -256,7 +276,7 @@
     let LB_IMAGES = []; let LB_I = 0;
 
     function openLightbox(images, startIdx=0){
-      LB_IMAGES = images || [];
+      LB_IMAGES = (images||[]).filter(im=>im && im.src);
       LB_I = Math.max(0, Math.min(startIdx, LB_IMAGES.length-1));
       renderLB();
       lightbox.classList.add('show');
@@ -273,7 +293,10 @@
       const im = LB_IMAGES[LB_I];
       lbImg.src = im.src;
       lbImg.alt = im.alt || '';
-      lbCaption.textContent = im.caption || '';
+      const count = `<span class="lb-count">${LB_I+1}/${LB_IMAGES.length}</span>`;
+      lbCaption.innerHTML = (im.caption ? im.caption : '') + (LB_IMAGES.length>1? ` ${count}` : '');
+      // hide arrows when only one image
+      lbPrev.style.display = lbNext.style.display = (LB_IMAGES.length>1 ? 'grid' : 'none');
     }
     function nextLB(){ LB_I = (LB_I+1)%LB_IMAGES.length; renderLB(); }
     function prevLB(){ LB_I = (LB_I-1+LB_IMAGES.length)%LB_IMAGES.length; renderLB(); }
@@ -290,6 +313,7 @@
       if(e.key==='ArrowLeft') prevLB();
     });
 
+    // ---------- Data binding ----------
     (async function(){
       try{
         const d = await fetch('data.json?cache='+Date.now()).then(r=>r.json());
@@ -303,13 +327,14 @@
         const resumeLink = document.querySelector('a[href="/resume.pdf"]'); if(resumeLink && d.site?.resume){ resumeLink.href = d.site.resume; }
         const about = document.querySelector('#about p'); if(about && d.about?.text) about.textContent = d.about.text;
 
-        // build research grid (cover only; click opens lightbox)
+        // build research grid
         const grid = document.getElementById('research-grid');
         const fallback = document.getElementById('research-fallback');
 
         if (Array.isArray(d.research) && d.research.length){
           grid.innerHTML = d.research.map((it, idx)=>{
-            const imgs = Array.isArray(it.images) && it.images.length ? it.images : (it.img ? [{src:it.img, alt:it.title||''}] : []);
+            const imgs = (Array.isArray(it.images) && it.images.length ? it.images
+                          : (it.img ? [{src:it.img, alt:it.title||''}] : [])).filter(x=>x && x.src);
             const cover = imgs[0];
             return `
               <article class="card" data-idx="${idx}">
@@ -320,7 +345,7 @@
               </article>`;
           }).join('');
 
-          // hook up gallery openers
+          // open gallery
           grid.querySelectorAll('.open-gallery, .card').forEach(card=>{
             card.addEventListener('click', (e)=>{
               const a = e.currentTarget.closest('.card');
@@ -328,7 +353,7 @@
               const i = +a.dataset.idx;
               const it = d.research[i];
               const imgs = (Array.isArray(it.images) && it.images.length ? it.images :
-                           (it.img ? [{src:it.img, alt:it.title||''}] : []));
+                           (it.img ? [{src:it.img, alt:it.title||''}] : [])).filter(x=>x && x.src);
               if(imgs.length) openLightbox(imgs, 0);
             });
           });
@@ -374,4 +399,3 @@
   </script>
 </body>
 </html>
-
