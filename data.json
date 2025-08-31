@@ -15,12 +15,12 @@
     {
       "title": "Dynamics of polarons in semiconducting materials ",
       "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments, with applications spanning quantum technologies, condensed matter physics, and chemical/biological systems. ",
-      "img": "assets/research/image.png",
+      "img": "assets/research/chatgpt.png",
       "tags": [],
       "upload": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png",
       "images": [
         {
-          "src": "assets/research/image.png",
+          "src": "assets/research/chatgpt.png",
           "alt": "",
           "caption": "",
           "date": "2025-08-30"
@@ -32,7 +32,7 @@
           "date": "2025-08-30"
         },
         {
-          "src": "assets/research/chatgpt.png",
+          "src": "assets/research/image.png",
           "alt": "",
           "caption": "",
           "date": "2025-08-31"
@@ -112,15 +112,15 @@
   "skills": [
     {
       "title": "Quantum Dynamical methods",
-      "text": "1. Coherent state based approaches to quantum dynamics: vMCG (variational multiconfigurational Gaussian), Coupled coherent states (CCS), static grid of coherent states (SCS), GMCTDH (Gaussian based multiconfigurational time-dependent Hartree).\n2. Semiclassical methods to quantum dynamics: Semiclassical initial value representation (SCIVR), Herman-Kluk propagator (HK).\n3. Other variational methods: MCTDH (multiconfigurational time-dependent Hartree), ML-MCTDH (multi-layer multiconfigurational time-dependent Hartree)."
+      "text": "1. Coherent state based approaches to quantum dynamics: vMCG (variational multiconfigurational Gaussian), Coupled coherent states (CCS), static grid of coherent states (SCS), GMCTDH (Gaussian based multiconfigurational time-dependent Hartree).\n\n2. Semiclassical methods to quantum dynamics: Semiclassical initial value representation (SCIVR), Herman-Kluk propagator (HK).\n\n3. Other variational methods: MCTDH (multiconfigurational time-dependent Hartree), ML-MCTDH (multi-layer multiconfigurational time-dependent Hartree)."
     },
     {
       "title": "Computational skills",
-      "text": "1. Software packages: MATLAB, Maple, Mathcad, Scilab, MCTDH, Quantics\n2. Programming Language: Python, Fortran, Wolfram Mathematica\n3. Plotting: Origin, Gnuplot\n4. Document Processing: LaTeX, MS Office, LibreOffice\n5. Operating System: Linux, Windows, Mac"
+      "text": "1. Software packages: MATLAB, Maple, Mathcad, Scilab, MCTDH, Quantics\n\n2. Programming Language: Python, Fortran, Wolfram Mathematica\n\n3. Plotting: Origin, Gnuplot\n\n4. Document Processing: LaTeX, MS Office, LibreOffice\n\n5. Operating System: Linux, Windows, Mac"
     },
     {
       "title": "Languages",
-      "text": "English, Hindi, Bengali, Gujarati, German (Limited working proficiency)"
+      "text": "English\n\nHindi\n\nBengali\n\nGujarati\n\nGerman (Limited working proficiency)"
     }
   ],
   "contact": {
