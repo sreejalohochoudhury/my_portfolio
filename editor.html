@@ -23,9 +23,9 @@
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   @media (max-width:900px){.grid{grid-template-columns:1fr}}
   .thumbs{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-  .thumb{border:1px solid var(--line);border-radius:10px;padding:6px;background:var(--surface);display:flex;align-items:center;gap:8px}
-  .thumb img{width:60px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
-  .thumb .mini-actions{display:flex;gap:6px}
+  .thumb{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--surface);display:flex;align-items:flex-start;gap:10px;width:100%}
+  .thumb img{width:64px;height:52px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+  .thumb .mini-actions{display:flex;gap:6px;align-items:center}
 </style>
 </head>
 <body>
@@ -67,7 +67,7 @@
     <label>About text<textarea id="about_text"></textarea></label>
   </section>
 
-  <!-- Research items (each has its own gallery) -->
+  <!-- Research items (gallery per item) -->
   <section class="card">
     <div class="toolbar" style="justify-content:space-between">
       <h3 style="margin:0">Research items</h3>
@@ -152,15 +152,17 @@ function fileSafe(n){return n.toLowerCase().replace(/[^a-z0-9._-]+/g,'-').replac
 function setStatus(t){els.status.textContent=t||'';}
 
 function render(){
+  // --- Research list with simple append flow + captions ---
   els.researchList.innerHTML='';
   state.research.forEach((it,idx)=>{
     if(!Array.isArray(it.images)) it.images=[];
     const thumbs = it.images.map((im,i)=>`
       <div class="thumb" data-i="${i}">
-        ${im.src?`<img src="${im.src}" alt="">`:`<div class="small" style="width:60px">no image</div>`}
-        <div style="min-width:220px;flex:1">
+        ${im.src?`<img src="${im.src}" alt="">`:`<div class="small" style="width:64px">no image</div>`}
+        <div style="min-width:240px;flex:1">
           <label>src<input data-k="src" data-i="${i}" value="${im.src||''}" placeholder="assets/research/img.jpg"></label>
-          <label>alt<input data-k="alt" data-i="${i}" value="${im.alt||''}" placeholder="description"></label>
+          <label>alt<input data-k="alt" data-i="${i}" value="${im.alt||''}" placeholder="short alt text"></label>
+          <label>caption<textarea data-k="caption" data-i="${i}" placeholder="caption / description">${im.caption||''}</textarea></label>
         </div>
         <div class="mini-actions">
           <label class="btn secondary" style="cursor:pointer">
@@ -183,7 +185,7 @@ function render(){
       <div class="grid" style="align-items:end">
         <div><label>Tags (comma-separated)<input data-k="tags" value="${(it.tags||[]).join(', ')}"/></label></div>
         <div>
-          <!-- SIMPLE FLOW: choose file → OK appends to images[] -->
+          <!-- SIMPLE FLOW: choose file → OK appends to images[] in order -->
           <label>Choose file<input type="file" data-k="appendFile" accept="image/*"/></label>
           <button class="btn" data-act="appendOk">OK</button>
           <button class="btn secondary" data-act="del" style="float:right">Delete research</button>
@@ -204,8 +206,9 @@ function render(){
     div.addEventListener('input', e=>{
       const k=e.target.dataset.k; if(!k) return;
       if(k==='tags'){ it.tags = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); }
-      else if(k==='src' || k==='alt'){ const i=+e.target.dataset.i; if(isFinite(i)) it.images[i][k]=e.target.value; }
-      else{ it[k]=e.target.value; }
+      else if(k==='src' || k==='alt' || k==='caption'){
+        const i=+e.target.dataset.i; if(isFinite(i)) it.images[i][k]=e.target.value;
+      } else { it[k]=e.target.value; }
     });
 
     // file inputs
@@ -228,11 +231,12 @@ function render(){
         state._uploads[p]=f;
         it.images[i].src=p;
         if(!it.img) it.img=p;
+        e.target.value='';
         render();
       }
       if(k==='appendFile'){
-        // store chosen file temporarily on the element
-        e.target.dataset.buf = '1';
+        // mark available; the OK button will read this file
+        e.target.dataset.ready='1';
       }
     });
 
@@ -250,8 +254,9 @@ function render(){
         const p='assets/research/'+fileSafe(f.name);
         state._uploads[p]=f;
         it.images.push({src:p,alt:it.title?`Image for ${it.title}`:'',caption:'',date:new Date().toISOString().slice(0,10)});
-        if(!it.img) it.img=p;
-        input.value=''; // ready for next: Choose file → OK
+        if(!it.img) it.img=p;      // keep first image as cover; no change if already set
+        input.value='';            // ready for next: Choose file → OK
+        input.dataset.ready='';    // clear flag
         render();
       }
     });
