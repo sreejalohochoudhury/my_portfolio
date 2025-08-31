@@ -3,134 +3,20 @@
     "title": "Sreeja Loho Choudhury",
     "resume": "",
     "hero": {
-      "lead": "I am a theoretical physicist working in the field of atomic and molecular physics with an expertise in quantum dynamics, open quantum systems, semiclassical mechanics and variational methods. ",
-      "img": "",
-      "location": "Raleigh, United States"
+      "lead": "",
+      "img": "assets/sree.jpg",
+      "location": ""
     }
   },
   "about": {
-    "text": "I am a physicist specializing in quantum dynamics and open quantum systems, with extensive experience in both numerical simulations and analytical methods, particularly within system–bath models. My research is driven by a deep passion for Mathematics and Physics, and I bring expertise in bridging theoretical insights with computational techniques.\n\nI am well prepared to teach undergraduate and postgraduate courses in quantum mechanics, statistical physics, quantum computation, and computational methods, with a strong commitment to integrating cutting-edge research into pedagogy. I value student mentoring, encouraging curiosity-driven learning, and guiding the next generation in modern quantum science.\n\nI am seeking a faculty position where I can contribute to both high-quality research and curriculum innovation.\n\nBeyond academia, I cultivate a balanced life through meditation, cooking, and the practice of martial arts (Brazilian Jiu-Jitsu), which strengthen focus, discipline, and creativity—qualities I also bring to my research and teaching."
+    "text": ""
   },
-  "research": [
-    {
-      "title": "Dynamics of polarons in semiconducting materials ",
-      "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments, with applications spanning quantum technologies, condensed matter physics, and chemical/biological systems. ",
-      "img": "assets/research/chatgpt.png",
-      "tags": [],
-      "upload": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png",
-      "images": [
-        {
-          "src": "assets/research/chatgpt.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-30"
-        },
-        {
-          "src": "assets/research/screenshot-2025-06-13-at-23.53.09.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-30"
-        },
-        {
-          "src": "assets/research/image.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-31"
-        }
-      ],
-      "appendFile": "C:\\fakepath\\chatgpt.png",
-      "bulk": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png",
-      "replace": "C:\\fakepath\\image.png"
-    },
-    {
-      "title": "Decoherence in spin-boson system",
-      "desc": "We investigate the time scale of decoherence in complex molecular systems following laser excitation. Vibronic coupling Hamiltonians in conjunction with realistic, structured spectral densities are employed in order to track decoherence on a\ntypical time scale of femtoseconds.",
-      "img": "assets/research/ho_1.png",
-      "tags": [],
-      "images": [
-        {
-          "src": "assets/research/ho_1.png",
-          "alt": "Image for Decoherence in spin-boson system",
-          "caption": "",
-          "date": "2025-08-31"
-        },
-        {
-          "src": "assets/research/bloch_vector_0k_300k_j024.png",
-          "alt": "Image for Decoherence in spin-boson system",
-          "caption": "",
-          "date": "2025-08-31"
-        }
-      ],
-      "appendFile": "C:\\fakepath\\ho_1.png",
-      "bulk": "C:\\fakepath\\bloch_vector_0K_300K_j024.png"
-    },
-    {
-      "title": "Thermalization in finite quantum systems",
-      "desc": "We investigate thermalization in finite quantum systems using coherent state-based approaches to\nsolve the time-dependent Schrödinger equation. Earlier, a lot of work has been done in the quantum\nrealm, to study thermalization in spin systems, but not for the case of continuous systems. Here,\nwe focus on continuous systems.\n",
-      "img": "assets/research/qdw.png",
-      "tags": [],
-      "images": [
-        {
-          "src": "assets/research/qdw.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-31"
-        },
-        {
-          "src": "assets/research/probability_initial.jpg",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-31"
-        }
-      ],
-      "appendFile": "C:\\fakepath\\qdw.png",
-      "bulk": "C:\\fakepath\\probability_initial.jpg"
-    }
-  ],
-  "publications": [
-    {
-      "title": "Quantum approach to the thermalization of the toppling pencil interacting with a finite bath",
-      "meta": "Sreeja Loho Choudhury and Frank Grossmann • Dresden • 2022",
-      "link": "https://doi.org/10.1103/PhysRevA.105.022201"
-    },
-    {
-      "title": "Coherent state based solutions of the time-dependent Schrödinger equation: hierarchy of approximations to the variational principle",
-      "meta": "Michael Werther, Sreeja Loho Choudhury and Frank Grossmann • Dresden • 2021",
-      "link": "https://doi.org/10.1080/0144235X.2020.1823168"
-    },
-    {
-      "title": "On the Husimi version of the classical limit of quantum correlation functions",
-      "meta": "Sreeja Loho Choudhury and Frank Grossmann • Dresden • 2020",
-      "link": "https://doi.org/10.3390/condmat5010003"
-    },
-    {
-      "title": "A new approach to the generalization of Planck's law of black-body radiation",
-      "meta": "Sreeja Loho Choudhury and R. K. Paul • Ranchi • 2018",
-      "link": "https://doi.org/10.1016/j.aop.2018.06.004"
-    }
-  ],
-  "skills": [
-    {
-      "title": "Quantum Dynamical methods",
-      "text": "1. Coherent state based approaches to quantum dynamics: vMCG (variational multiconfigurational Gaussian), Coupled coherent states (CCS), static grid of coherent states (SCS), GMCTDH (Gaussian based multiconfigurational time-dependent Hartree).\n\n2. Semiclassical methods to quantum dynamics: Semiclassical initial value representation (SCIVR), Herman-Kluk propagator (HK).\n\n3. Other variational methods: MCTDH (multiconfigurational time-dependent Hartree), ML-MCTDH (multi-layer multiconfigurational time-dependent Hartree)."
-    },
-    {
-      "title": "Computational skills",
-      "text": "1. Software packages: MATLAB, Maple, Mathcad, Scilab, MCTDH, Quantics\n\n2. Programming Language: Python, Fortran, Wolfram Mathematica\n\n3. Plotting: Origin, Gnuplot\n\n4. Document Processing: LaTeX, MS Office, LibreOffice\n\n5. Operating System: Linux, Windows, Mac"
-    },
-    {
-      "title": "Languages",
-      "text": "English\n\nHindi\n\nBengali\n\nGujarati\n\nGerman (Limited working proficiency)"
-    }
-  ],
+  "research": [],
+  "publications": [],
+  "skills": [],
   "contact": {
-    "email": "sreejalohochoudhury@gmail.com, slohoch@ncsu.edu",
-    "location": "Raleigh, North Carolina",
-    "socials": [
-      "https://sreejalohochoudhury.github.io/my_portfolio/",
-      "https://scholar.google.com/citations?user=NG3Qg9YAAAAJ&hl=en&oi=ao",
-      "https://www.researchgate.net/profile/Sreeja-Loho-Choudhury",
-      "https://www.linkedin.com/in/sreeja-loho-choudhury-7b7785124/"
-    ]
+    "email": "",
+    "location": "",
+    "socials": []
   }
 }
