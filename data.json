@@ -1,90 +1,24 @@
 {
   "site": {
     "title": "Sreeja Loho Choudhury",
-    "resume": "https://drive.google.com/file/d/1dSagagTorI8ipssUuGvHAymvjPyJFE-l/view",
+    "resume": "",
     "hero": {
-      "lead": "Welcome! I am a theoretical physicist fascinated by how atoms and molecules behave, from the quirks of quantum dynamics to the puzzles of open systems.",
+      "lead": "I am a theoretical physicist working in the field of atomic and molecular physics with an expertise in quantum dynamics, open quantum systems, semiclassical mechanics, variational methods. ",
       "img": "",
       "location": "Raleigh, United States"
     }
   },
   "about": {
-    "text": "I am a physicist specializing in quantum dynamics and open quantum systems, with extensive experience in both numerical simulations and analytical methods, particularly within system–bath models. My research is driven by a deep passion for Mathematics and Physics, and I bring expertise in bridging theoretical insights with computational techniques.\n\n\nI have taught quantum theory to undergraduate students, and I greatly enjoy designing courses in quantum mechanics, statistical physics, quantum computation, and computational methods. I am passionate about integrating research with pedagogy and mentoring students in modern quantum science.\n\n\nBeyond academia, I cultivate a balanced life through meditation, cooking, and the practice of martial arts (Brazilian Jiu-Jitsu), which strengthen focus, discipline, and creativity—qualities I also bring to my research and teaching."
+    "text": "I am a physicist specializing in quantum dynamics and open quantum\nsystems, with a strong background in numerical simulations, analytical calculations and delving with system-bath models. I am passionate about Mathematics and Physics in general. I am well prepared to teach undergraduate and postgraduate\ncourses in quantum mechanics, statistical physics, quantum computation and computational\nmethods. Passionate about integrating research with pedagogy and mentoring\nstudents in modern quantum science. Seeking a faculty position to\ncontribute to both high-quality research and curriculum innovation."
   },
   "research": [
     {
       "title": "Dynamics of polarons in semiconducting materials ",
       "desc": "Polarons are key quasiparticles that govern the electronic and optical properties of organic semiconducting polymers and molecular aggregates. Understanding the dissipative dynamics of polarons in presence of a quantum bath of harmonic oscillators is crucial for elucidating how quantum systems evolve in realistic environments, with applications spanning quantum technologies, condensed matter physics, and chemical/biological systems. ",
-      "img": "assets/research/chatgpt.png",
+      "img": "assets/chatgpt.png",
       "tags": [],
       "upload": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png",
-      "images": [
-        {
-          "src": "assets/research/chatgpt.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-30"
-        },
-        {
-          "src": "assets/research/screenshot-2025-06-13-at-23.53.09.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-30"
-        },
-        {
-          "src": "assets/research/image.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-31"
-        }
-      ],
-      "appendFile": "C:\\fakepath\\chatgpt.png",
-      "bulk": "C:\\fakepath\\Screenshot 2025-06-13 at 23.53.09.png",
-      "replace": "C:\\fakepath\\image.png"
-    },
-    {
-      "title": "Decoherence in spin-boson system",
-      "desc": "We investigate the time scale of decoherence in complex molecular systems following laser excitation. Vibronic coupling Hamiltonians in conjunction with realistic, structured spectral densities are employed in order to track decoherence on a\ntypical time scale of femtoseconds.",
-      "img": "assets/research/ho_1.png",
-      "tags": [],
-      "images": [
-        {
-          "src": "assets/research/ho_1.png",
-          "alt": "Image for Decoherence in spin-boson system",
-          "caption": "",
-          "date": "2025-08-31"
-        },
-        {
-          "src": "assets/research/bloch_vector_0k_300k_j024.png",
-          "alt": "Image for Decoherence in spin-boson system",
-          "caption": "",
-          "date": "2025-08-31"
-        }
-      ],
-      "appendFile": "C:\\fakepath\\ho_1.png",
-      "bulk": "C:\\fakepath\\bloch_vector_0K_300K_j024.png"
-    },
-    {
-      "title": "Thermalization in finite quantum systems",
-      "desc": "We investigate thermalization in finite quantum systems using coherent state-based approaches to\nsolve the time-dependent Schrödinger equation. Earlier, a lot of work has been done in the quantum\nrealm, to study thermalization in spin systems, but not for the case of continuous systems. Here,\nwe focus on continuous systems.\n",
-      "img": "assets/research/qdw.png",
-      "tags": [],
-      "images": [
-        {
-          "src": "assets/research/qdw.png",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-31"
-        },
-        {
-          "src": "assets/research/probability_initial.jpg",
-          "alt": "",
-          "caption": "",
-          "date": "2025-08-31"
-        }
-      ],
-      "appendFile": "C:\\fakepath\\qdw.png",
-      "bulk": "C:\\fakepath\\probability_initial.jpg"
+      "images": []
     }
   ],
   "publications": [
@@ -111,16 +45,8 @@
   ],
   "skills": [
     {
-      "title": "Quantum Dynamical methods",
-      "text": "1. Coherent state based approaches to quantum dynamics: vMCG (variational multiconfigurational Gaussian), Coupled coherent states (CCS), static grid of coherent states (SCS), GMCTDH (Gaussian based multiconfigurational time-dependent Hartree).\n\n2. Semiclassical methods to quantum dynamics: Semiclassical initial value representation (SCIVR), Herman-Kluk propagator (HK).\n\n3. Other variational methods: MCTDH (multiconfigurational time-dependent Hartree), ML-MCTDH (multi-layer multiconfigurational time-dependent Hartree)."
-    },
-    {
-      "title": "Computational skills",
-      "text": "1. Software packages: MATLAB, Maple, Mathcad, Scilab, MCTDH, Quantics\n\n2. Programming Language: Python, Fortran, Wolfram Mathematica\n\n3. Plotting: Origin, Gnuplot\n\n4. Document Processing: LaTeX, MS Office, LibreOffice\n\n5. Operating System: Linux, Windows, Mac"
-    },
-    {
-      "title": "Languages",
-      "text": "English,\n\nHindi,\n\nBengali,\n\nGujarati,\n\nGerman (Limited working proficiency)"
+      "title": "Skill area",
+      "text": "Short description"
     }
   ],
   "contact": {
